@@ -1,9 +1,9 @@
 '''
-SVM Accuracy:  0.912
-Perceptron Accuracy:  0.864
-KNN Accuracy:  0.94
-Random forest Accuracy:  0.976
-Neural net accuracy:  0.928
+SVM Accuracy:  0.7361538461538462
+Perceptron Accuracy:  0.6369230769230769
+KNN Accuracy:  0.7438461538461538
+Random forest Accuracy:  0.8176923076923077  
+Neural net accuracy:  0.7307692307692307
 '''
 
 import pandas as pd 
