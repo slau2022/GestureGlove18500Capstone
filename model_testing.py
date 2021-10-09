@@ -9,6 +9,12 @@ Neural net accuracy:  0.7307692307692307
 import pandas as pd 
 import sklearn
 from sklearn import preprocessing
+import matplotlib.pyplot as plt
+
+
+letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+# letters = list(range(1,27))[::1]
+
 train_df = pd.read_csv('simulated_train_data.csv',delimiter=' ') 
 test_df = pd.read_csv('simulated_test_data.csv',delimiter=' ')
 headers = train_df.columns.values
@@ -25,6 +31,7 @@ y_test = test_df[label]
 
 
 from sklearn import metrics
+from sklearn.metrics import ConfusionMatrixDisplay, plot_confusion_matrix
 
 #svm
 from sklearn.pipeline import make_pipeline
@@ -35,29 +42,44 @@ model = make_pipeline(StandardScaler(), LinearSVC(random_state=0, tol=1e-5, max_
 model.fit(X, y)
 y_pred = model.predict(X_test)  
 print("SVM Accuracy: ", metrics.accuracy_score(y_test,y_pred))
+plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=letters)
+ 
 
 #perceptron
 from sklearn.linear_model import Perceptron
 model = Perceptron(tol=1e-3, random_state=0)
 model.fit(X,y)
 y_pred = model.predict(X_test)
-print("Perceptron Accuracy: ", metrics.accuracy_score(y_test,y_pred))
+print("Perceptron Accuracy: ", metrics.accuracy_score(y_test,y_pred))  
+plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=letters)
+
+ 
 
 #knn
 from sklearn.neighbors import KNeighborsClassifier 
 model = KNeighborsClassifier(n_neighbors=19).fit(X,y)
 y_pred = model.predict(X_test)  
 print("KNN Accuracy: ", metrics.accuracy_score(y_test,y_pred))
+plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=letters)
+ 
 
 #random forest
 from sklearn.ensemble import RandomForestClassifier
 model = RandomForestClassifier(n_estimators=100).fit(X,y)
 y_pred = model.predict(X_test) 
 print("Random forest Accuracy: ", metrics.accuracy_score(y_test,y_pred))
+plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=letters)
+ 
 
 #neural net 
 from sklearn.neural_network import MLPClassifier
-model = MLPClassifier(solver='lbfgs',alpha=1e-5, hidden_layer_sizes=(10,7),random_state=1)
+model = MLPClassifier(solver='sgd',alpha=1e-5, max_iter = 1000,hidden_layer_sizes=(10,7),random_state=1,learning_rate='adaptive') 
+#,activation='logistic'
+#
+#10,7
 model.fit(X,y)
 y_pred = model.predict(X_test) 
 print("Neural net accuracy: ", metrics.accuracy_score(y_test,y_pred))
+plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=letters)
+
+ 
