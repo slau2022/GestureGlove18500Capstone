@@ -163,7 +163,20 @@ void loop() {
   float flexR_Pinky = R_DIV * (VCC / flexV_Pinky - 1.0);
   float angle_Pinky = map(flexR_Pinky, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
                    0, 90.0);
-  Serial.print("\t\tThumb angle: ");          
+
+  float to_send[] = {angle_Thumb, angle_Index, angle_Middle, angle_Ring, angle_Pinky, 
+                     accel.acceleration.x, accel.acceleration.y, accel.acceleration.z,
+                     mag.magnetic.x, mag.magnetic.y, mag.magnetic.z,
+                     gyro.gyro.x, gyro.gyro.y, gyro.gyro.z};
+
+  Serial.println("\nbegin");
+  for (int i = 0; i < 14; i++) {
+    Serial.print("\n");
+    Serial.print(to_send[i]);
+  }
+  Serial.print("\nend");
+  
+  /*Serial.print("\t\tThumb angle: ");          
   Serial.print(angle_Thumb);
   Serial.print("\tIndex angle: ");  
   Serial.print(angle_Index); 
@@ -189,17 +202,17 @@ void loop() {
   Serial.print(mag.magnetic.y);
   Serial.print(" \tZ: ");
   Serial.print(mag.magnetic.z);
-  Serial.println(" uT");
+  Serial.println(" uT"); */
 
   /* Display the results (acceleration is measured in m/s^2) */
-  Serial.print("\t\tGyro X: ");
+  /*Serial.print("\t\tGyro X: ");
   Serial.print(gyro.gyro.x);
   Serial.print(" \tY: ");
   Serial.print(gyro.gyro.y);
   Serial.print(" \tZ: ");
   Serial.print(gyro.gyro.z);
   Serial.println(" radians/s ");
-  Serial.println();
+  Serial.println(); */
 
   delay(100);
   // put your main code here, to run repeatedly:
