@@ -2,7 +2,7 @@ import serial
 import keyboard
 import numpy as np
 
-arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.1)
+arduino = serial.Serial(port='/dev/cu.usbserial-10', baudrate=115200, timeout=.1)
 
 going = False
 data_point = []
@@ -19,13 +19,13 @@ while True:
     if (going):
         if (data == "end"):
             going = False
-            if (keyboard.is_pressed("space")):
+            if (keyboard.is_pressed("space") and len(data_point) == 14):
                 print(data_point)
                 all_data.append(data_point)
 
             data_point = []
         elif (data == "endbegin"):
-            if (keyboard.is_pressed("space")):
+            if (keyboard.is_pressed("space") and len(data_point) == 14):
                 print(data_point)
                 all_data.append(data_point)
             data_point = []
@@ -38,4 +38,4 @@ while True:
         going = True
 
 all_data = np.array(all_data)
-np.save("real_data/z.npy", all_data)
+np.save("real_data/space.npy", all_data)
