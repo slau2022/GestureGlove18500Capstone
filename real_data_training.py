@@ -14,6 +14,7 @@ import sklearn
 import matplotlib.pyplot as plt
 from sklearn import metrics
 from sklearn.metrics import ConfusionMatrixDisplay, plot_confusion_matrix
+from sklearn.metrics import classification_report
  
 #nn
 from sklearn.neural_network import MLPClassifier
@@ -29,22 +30,40 @@ from sklearn.neighbors import KNeighborsClassifier
 #random forest
 from sklearn.ensemble import RandomForestClassifier
 
-def char_to_num(l):
-    return ord(l)-96
+ 
+def label_to_num(l):
+    if(len(l)==1):
+        return ord(l)-96
+    elif(l=='space'):
+        return 27
+    elif(l=='random'):
+        return 28
 
-def num_to_char(n):
-    return chr(n+97)
+def num_to_label(n):
+    if(n<27):
+        return chr(n+97)
+    elif(n==27):
+        return 'space'
+    else: 
+        return 'random'
 
-def parse_data(): 
-
+def parse_data(letters): 
+    letters.append('space')
+    letters.append('random')
     all_data = np.empty((0,15))
+    #parse letter data
     for l in letters:
         l_file = 'real_data/'+l+'.npy'
         l_data = np.load(l_file)
         r, c = l_data.shape 
-        l_data = np.append(l_data, np.ones((r,1))*char_to_num(l), axis=-1)
+        l_data = np.append(l_data, np.ones((r,1))*label_to_num(l), axis=-1)
      
         all_data = np.vstack((all_data, l_data))
+
+ 
+
+
+
     return all_data
 
 
@@ -57,7 +76,7 @@ def train_models(X,y,X_test,y_test):
     print("SVM Accuracy: ", metrics.accuracy_score(y_test,y_pred))
     plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=letters)
 
-    #perceptron
+    #perceptron, we wont use this one probably
     
     model = Perceptron(tol=1e-3, random_state=0)
     model.fit(X,y)
@@ -77,23 +96,25 @@ def train_models(X,y,X_test,y_test):
     y_pred = model.predict(X_test) 
     print("Random forest Accuracy: ", metrics.accuracy_score(y_test,y_pred))
     plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=letters)
+    print(classification_report(y_test,y_pred, labels=[27,28], target_names = ['space','random']))
     
-
+    return
     #neural net 
     
-    model = MLPClassifier(solver='lbfgs',alpha=1e-5, hidden_layer_sizes=(10,7),random_state=1)
+    model = MLPClassifier(solver='lbfgs',alpha=1e-5, hidden_layer_sizes=(10,7),random_state=1, max_iter=1000)
     model.fit(X,y)
     y_pred = model.predict(X_test) 
     print("Neural net accuracy: ", metrics.accuracy_score(y_test,y_pred))
     plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=letters)
 
-    plt.show()
+    # plt.show()
 
 
 if __name__ == "__main__":
 
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-    all_data = parse_data()
+    labels = letters + ['space','random']
+    all_data = parse_data(letters)
     df = pd.DataFrame(all_data, columns = ['s1','s2','s3','s4','s5','s6',
         's7','s8','s9','s10','s11','s12','s13','s14','label'])
 
@@ -104,6 +125,7 @@ if __name__ == "__main__":
     # split data
     from sklearn.model_selection import train_test_split
     X, y = df[features], df[label]
+ 
     X_train, X_test, y_train, y_test = train_test_split( X, y, test_size=0.33)
 
     #preprocessing data
