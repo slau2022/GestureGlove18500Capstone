@@ -3,6 +3,7 @@ import keyboard
 import numpy as np
 
 arduino = serial.Serial(port='/dev/cu.usbserial-10', baudrate=115200, timeout=.1)
+gesture_name = "space"
 
 going = False
 data_point = []
@@ -38,4 +39,4 @@ while True:
         going = True
 
 all_data = np.array(all_data)
-np.save("real_data/space.npy", all_data)
+np.save("real_data/" + gesture_name + ".npy", all_data)
