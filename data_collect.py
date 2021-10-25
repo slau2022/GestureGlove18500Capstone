@@ -5,6 +5,11 @@ import numpy as np
 arduino = serial.Serial(port='/dev/cu.usbserial-10', baudrate=115200, timeout=.1)
 gesture_name = "space"
 
+letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', \
+           'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', \
+           'w', 'x', 'y', 'z', 'space', 'random']
+
+
 going = False
 data_point = []
 
