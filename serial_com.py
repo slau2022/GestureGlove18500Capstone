@@ -1,7 +1,6 @@
 import serial
 import keyboard
 import numpy as np
-import pyttx3
 import sklearn 
 import pickle
 from sklearn.preprocessing import StandardScaler   

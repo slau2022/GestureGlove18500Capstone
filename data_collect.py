@@ -1,13 +1,14 @@
 import serial
 import keyboard
 import numpy as np
+import time
 
-arduino = serial.Serial(port='/dev/cu.usbserial-10', baudrate=115200, timeout=.1)
-gesture_name = "space"
+arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.1)
 
-letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', \
-           'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', \
-           'w', 'x', 'y', 'z', 'space', 'random']
+letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+labels = letters + ['space','random']
+gesture_name = "c"
+gesture_ind = 2
 
 
 going = False
@@ -15,9 +16,20 @@ data_point = []
 
 all_data = []
 
+print("COLLECTING FOR LABEL", gesture_name)
+
 while True: 
     if (keyboard.is_pressed("esc")):
-        break
+        if (gesture_ind == 27):
+            break
+        else:
+            all_data = np.array(all_data)
+            np.save("real_better_data/" + gesture_name + ".npy", all_data)
+            gesture_ind += 1
+            gesture_name = labels[gesture_ind]
+            all_data = []
+            print("COLLECTING FOR LABEL", gesture_name)
+            time.sleep(3)
     try:
         data = arduino.readline().decode('utf-8').strip()
     except:
@@ -44,4 +56,4 @@ while True:
         going = True
 
 all_data = np.array(all_data)
-np.save("real_data/" + gesture_name + ".npy", all_data)
+np.save("real_better_data/" + gesture_name + ".npy", all_data)
