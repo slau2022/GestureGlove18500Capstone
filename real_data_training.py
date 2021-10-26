@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd 
 import sklearn
 import matplotlib.pyplot as plt
+import pickle
 from sklearn import metrics
 from sklearn.metrics import ConfusionMatrixDisplay, plot_confusion_matrix
 from sklearn.metrics import classification_report
@@ -47,26 +48,32 @@ def num_to_label(n):
     else: 
         return 'random'
 
-def parse_data(letters): 
-    letters.append('space')
-    letters.append('random')
+def parse_data(labels, direc='real_data/'):  
     all_data = np.empty((0,15))
-    #parse letter data
-    for l in letters:
-        l_file = 'real_data/'+l+'.npy'
+    #parse label data
+    for l in labels:
+        l_file = direc+l+'.npy'
         l_data = np.load(l_file)
         r, c = l_data.shape 
         l_data = np.append(l_data, np.ones((r,1))*label_to_num(l), axis=-1)
      
         all_data = np.vstack((all_data, l_data))
 
- 
-
-
 
     return all_data
 
 
+def train_rf_model(X,y,X_test,y_test):
+    #random forest 
+    rf_model = RandomForestClassifier(n_estimators=100).fit(X,y)
+    y_pred = rf_model.predict(X_test) 
+    print("Random forest Accuracy: ", metrics.accuracy_score(y_test,y_pred))
+    
+    print(classification_report(y_test,y_pred, labels=[27,28], target_names = ['space','random']))
+    
+    # pickle.dump(rf_model,open("rf_model.p", "wb")) 
+ 
+    # t = rf_model.predict_proba(X[0:1]) 
 def train_models(X,y,X_test,y_test): 
 
     #svm
@@ -90,17 +97,13 @@ def train_models(X,y,X_test,y_test):
     print("KNN Accuracy: ", metrics.accuracy_score(y_test,y_pred))
     plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=letters)
     
-
-    #random forest 
-    model = RandomForestClassifier(n_estimators=100).fit(X,y)
-    y_pred = model.predict(X_test) 
+    #random_forest
+    rf_model = RandomForestClassifier(n_estimators=100).fit(X,y)
+    y_pred = rf_model.predict(X_test) 
     print("Random forest Accuracy: ", metrics.accuracy_score(y_test,y_pred))
-    plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=letters)
-    print(classification_report(y_test,y_pred, labels=[27,28], target_names = ['space','random']))
-    
-    return
-    #neural net 
-    
+    plot_confusion_matrix(rf_model,X_test,y_test, include_values=False,display_labels=letters)
+
+
     model = MLPClassifier(solver='lbfgs',alpha=1e-5, hidden_layer_sizes=(10,7),random_state=1, max_iter=1000)
     model.fit(X,y)
     y_pred = model.predict(X_test) 
@@ -114,7 +117,8 @@ if __name__ == "__main__":
 
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     labels = letters + ['space','random']
-    all_data = parse_data(letters)
+
+    all_data = parse_data(labels,'real_better_data')
     df = pd.DataFrame(all_data, columns = ['s1','s2','s3','s4','s5','s6',
         's7','s8','s9','s10','s11','s12','s13','s14','label'])
 
@@ -131,11 +135,18 @@ if __name__ == "__main__":
     #preprocessing data
     from sklearn.preprocessing import StandardScaler   
     scaler = StandardScaler()  
-    scaler.fit(X_train)
-    X_train = scaler.transform(X_train) 
-    X_test = scaler.transform(X_test)
+    scaler.fit(X_train.values)
+    X_train = scaler.transform(X_train.values) 
+    X_test = scaler.transform(X_test.values)
+    print(X_test[0])
+   
+    # pickle.dump(scaler,open("scaler.p", "wb"))
 
-    train_models(X_train,y_train,X_test,y_test)
+
+    train_rf_model(X_train,y_train,X_test,y_test)
+
+    # train_models(X_train,y_train,X_test,y_test)
+
     
 
 
