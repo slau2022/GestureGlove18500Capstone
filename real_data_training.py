@@ -1,5 +1,5 @@
 '''
-
+First set of data
 SVM Accuracy:  0.8733624454148472
 Perceptron Accuracy:  0.759825327510917
 KNN Accuracy:  0.8209606986899564
@@ -7,7 +7,23 @@ Random forest Accuracy:  0.9679767103347889
 Neural net accuracy:  0.7976710334788938
 [Finished in 6.0s]
 
+Real_data_oct26 without magnetometer
+SVM Accuracy:  0.7289272030651341
+Perceptron Accuracy:  0.5948275862068966
+KNN Accuracy:  0.6369731800766284
+Random forest Accuracy:  0.9703065134099617 
+Neural net accuracy:  0.8065134099616859
+
+Real_data_oct26 with magnetometer
+SVM Accuracy:  0.7710727969348659
+Perceptron Accuracy:  0.64272030651341
+KNN Accuracy:  0.6982758620689655
+Random forest Accuracy:  0.9645593869731801 
+Neural net accuracy:  0.8745210727969349
 '''
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 import numpy as np
 import pandas as pd 
 import sklearn
@@ -81,7 +97,7 @@ def train_models(X,y,X_test,y_test):
     model.fit(X, y)
     y_pred = model.predict(X_test)  
     print("SVM Accuracy: ", metrics.accuracy_score(y_test,y_pred))
-    plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=letters)
+    plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=labels)
 
     #perceptron, we wont use this one probably
     
@@ -89,38 +105,42 @@ def train_models(X,y,X_test,y_test):
     model.fit(X,y)
     y_pred = model.predict(X_test)
     print("Perceptron Accuracy: ", metrics.accuracy_score(y_test,y_pred))
-    plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=letters)
+    plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=labels)
 
     #knn 
     model = KNeighborsClassifier(n_neighbors=19).fit(X,y)
     y_pred = model.predict(X_test)  
     print("KNN Accuracy: ", metrics.accuracy_score(y_test,y_pred))
-    plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=letters)
+    plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=labels)
     
     #random_forest
     rf_model = RandomForestClassifier(n_estimators=100).fit(X,y)
     y_pred = rf_model.predict(X_test) 
     print("Random forest Accuracy: ", metrics.accuracy_score(y_test,y_pred))
-    plot_confusion_matrix(rf_model,X_test,y_test, include_values=False,display_labels=letters)
+    plot_confusion_matrix(rf_model,X_test,y_test, include_values=False,display_labels=labels)
 
 
     model = MLPClassifier(solver='lbfgs',alpha=1e-5, hidden_layer_sizes=(10,7),random_state=1, max_iter=1000)
     model.fit(X,y)
     y_pred = model.predict(X_test) 
     print("Neural net accuracy: ", metrics.accuracy_score(y_test,y_pred))
-    plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=letters)
+    plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=labels)
 
     # plt.show()
 
-
+    print(X_test[0])
 if __name__ == "__main__":
 
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     labels = letters + ['space','random']
 
-    all_data = parse_data(labels,'real_better_data')
-    df = pd.DataFrame(all_data, columns = ['s1','s2','s3','s4','s5','s6',
-        's7','s8','s9','s10','s11','s12','s13','s14','label'])
+    all_data = parse_data(labels,'real_data_oct26/')
+    df = pd.DataFrame(all_data, columns = ['f1','f2','f3','f4','f5','s1',
+        's2','s3','s4','s5','s6','s7','s8','s9','label'])
+
+    df_no_mag = df.drop(columns=['s7','s8','s9'])
+    print(df_no_mag.shape)
+    # df=df_no_mag #for testing no mag
 
     headers = df.columns.values
     label = headers[-1]
@@ -138,14 +158,14 @@ if __name__ == "__main__":
     scaler.fit(X_train.values)
     X_train = scaler.transform(X_train.values) 
     X_test = scaler.transform(X_test.values)
-    print(X_test[0])
+ 
    
     # pickle.dump(scaler,open("scaler.p", "wb"))
 
 
     train_rf_model(X_train,y_train,X_test,y_test)
 
-    # train_models(X_train,y_train,X_test,y_test)
+    train_models(X_train,y_train,X_test,y_test)
 
     
 
