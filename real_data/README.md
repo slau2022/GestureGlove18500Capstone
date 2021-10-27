@@ -1,0 +1,1 @@
+This data was taken by Rachel (facing the same direction)
