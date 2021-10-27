@@ -3,12 +3,27 @@ import keyboard
 import numpy as np
 import sklearn 
 import pickle
-from sklearn.preprocessing import StandardScaler   
+from sklearn.preprocessing import StandardScaler  
+import time
+
+'''
+COMMONLY CONFUSED LETTERS:
+c + o
+d + t + x
+n + a
+r + u + v
+t + m + n
+u + w + k
+x (a big problem)
+z + l
+'''
 
 arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.1)
 
-model = pickle.load(open("rf_model.p", "rb"))
-scaler = pickle.load(open("scaler.p", "rb"))
+mag = True
+
+model = pickle.load(open("rf_model_mag.p", "rb"))
+scaler = pickle.load(open("scaler_mag.p", "rb"))
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 labels = letters + ['space','random']
@@ -26,12 +41,14 @@ while True:
         if (data == "end"):
             going = False
             if (len(data_point) == 14):
+                if (not mag):
+                    data_point = data_point[:-3]
                 data_point = np.array(data_point).reshape(1, -1)
                 data_point = scaler.transform(data_point)
                 #print(data_point)
                 probabilities = model.predict_proba(data_point)
                 pred = np.argmax(probabilities)
-                if (probabilities[0, pred] > 0.2 and pred != 27):
+                if (probabilities[0, pred] > 0.25 and pred != 27):
                     print(labels[pred])
                 else:
                     print("-")
@@ -40,12 +57,14 @@ while True:
             data_point = []
         elif (data == "endbegin"):
             if (len(data_point) == 14):
+                if (not mag):
+                    data_point = data_point[:-3]
                 data_point = np.array(data_point).reshape(1, -1)
                 data_point = scaler.transform(data_point)
                 #print(data_point)
                 probabilities = model.predict_proba(data_point)
                 pred = np.argmax(probabilities)
-                if (probabilities[0, pred] > 0.52 and pred != 27):
+                if (probabilities[0, pred] > 0.25 and pred != 27):
                     print(labels[pred])
                 else:
                     print("-")
