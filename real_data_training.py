@@ -4,8 +4,7 @@ SVM Accuracy:  0.8733624454148472
 Perceptron Accuracy:  0.759825327510917
 KNN Accuracy:  0.8209606986899564
 Random forest Accuracy:  0.9679767103347889  
-Neural net accuracy:  0.7976710334788938
-[Finished in 6.0s]
+Neural net accuracy:  0.7976710334788938 
 
 Real_data_oct26 without magnetometer
 SVM Accuracy:  0.7289272030651341
@@ -64,10 +63,10 @@ def num_to_label(n):
     else: 
         return 'random'
 
-def parse_data(labels, direc='real_data/'):  
+def parse_data(labels, direc='real_data_oct26/'):  
     all_data = np.empty((0,15))
     #parse label data
-    for l in labels:
+    for l in labels: 
         l_file = direc+l+'.npy'
         l_data = np.load(l_file)
         r, c = l_data.shape 
@@ -87,7 +86,7 @@ def train_rf_model(X,y,X_test,y_test):
     
     print(classification_report(y_test,y_pred, labels=[27,28], target_names = ['space','random']))
     
-    # pickle.dump(rf_model,open("rf_model.p", "wb")) 
+    pickle.dump(rf_model,open("rf_model_mag.p", "wb")) 
  
     # t = rf_model.predict_proba(X[0:1]) 
 def train_models(X,y,X_test,y_test): 
@@ -139,7 +138,7 @@ if __name__ == "__main__":
         's2','s3','s4','s5','s6','s7','s8','s9','label'])
 
     df_no_mag = df.drop(columns=['s7','s8','s9'])
-    print(df_no_mag.shape)
+    print(df_no_mag.shape, df.shape)
     # df=df_no_mag #for testing no mag
 
     headers = df.columns.values
@@ -160,12 +159,12 @@ if __name__ == "__main__":
     X_test = scaler.transform(X_test.values)
  
    
-    # pickle.dump(scaler,open("scaler.p", "wb"))
+    pickle.dump(scaler,open("scaler_mag.p", "wb"))
 
 
     train_rf_model(X_train,y_train,X_test,y_test)
 
-    train_models(X_train,y_train,X_test,y_test)
+    # train_models(X_train,y_train,X_test,y_test)
 
     
 
