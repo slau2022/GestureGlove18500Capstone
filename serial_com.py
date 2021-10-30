@@ -57,6 +57,9 @@ while True:
                     print(labels[pred])
                 else:
                     print("-")
+                successes += 1
+            else:
+                fails += 1
                 
                 
             data_point = []
@@ -73,6 +76,9 @@ while True:
                     print(labels[pred])
                 else:
                     print("-")
+                successes += 1
+            else:
+                fails += 1
             data_point = []
         else:
             try:
