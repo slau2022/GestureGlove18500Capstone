@@ -30,6 +30,11 @@ labels = letters + ['space','random']
 
 going = False
 data_point = []
+
+successes = 0
+fails = 0
+
+start = time.time()
 while True: 
     if (keyboard.is_pressed("esc")):
         break
@@ -52,6 +57,9 @@ while True:
                     print(labels[pred])
                 else:
                     print("-")
+                successes += 1
+            else:
+                fails += 1
                 
                 
             data_point = []
@@ -68,6 +76,9 @@ while True:
                     print(labels[pred])
                 else:
                     print("-")
+                successes += 1
+            else:
+                fails += 1
             data_point = []
         else:
             try:
@@ -76,3 +87,8 @@ while True:
                 pass
     elif (data == "begin"):
         going = True
+
+end = time.time()
+print("All serial rate:", (successes + fails)/(end - start), "data/s")
+print("Success serial rate", successes/(end - start), "data/s")
+print("Data fail rate", fails/(successes + fails))

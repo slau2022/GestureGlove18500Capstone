@@ -5,7 +5,7 @@ import time
 
 arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.1)
 
-directory = "real_better_data/"
+directory = "real_data_oct30/"
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 labels = letters + ['space','random']
