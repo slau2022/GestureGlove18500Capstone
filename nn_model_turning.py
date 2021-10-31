@@ -1,8 +1,11 @@
  
 import warnings
-warnings.filterwarnings("ignore", category=FutureWarning)
+from sklearn.exceptions import ConvergenceWarning
+warnings.filterwarnings("ignore", category=FutureWarning) 
 
-warnings.filterwarnings("ignore", category=ConvergenceWarning)
+ConvergenceWarning('ignore')
+from warnings import filterwarnings
+filterwarnings('ignore')
  
 
 import numpy as np
@@ -101,7 +104,7 @@ def tune_nn_model(X,y, X_test, y_test, name=None):
     'alpha': loguniform(1e-5,1e-1) ,
     'learning_rate': ['constant','adaptive']}
 
-    model = MLPClassifier(max_iter=1000)
+    model = MLPClassifier(max_iter=500)
 
     cvFold = RepeatedKFold(n_splits=15, n_repeats=3)
     randomSearch = RandomizedSearchCV(estimator=model, n_jobs=-1,
@@ -112,9 +115,11 @@ def tune_nn_model(X,y, X_test, y_test, name=None):
     # extract the best model and evaluate it
     print("[INFO] evaluating...")
     best_model = searchResults.best_estimator_
-    #Save best model
+    #Save best model 
     pickle.dump(best_model,open(name+".p", "wb"))
     print(best_model) 
+    # model.fit(X,y)
+    y_pred = best_model.predict(X_test)
 
     #save resutls
     df = pd.DataFrame(searchResults.cv_results_)  
@@ -123,7 +128,8 @@ def tune_nn_model(X,y, X_test, y_test, name=None):
     else:
         df.to_csv(name + ".csv")
 
-    print("R2: {:.5f}".format(best_model.score(X_test, y_test)))
+    #metrics.accuracy_score
+    print("Accuracy: {:.5f}".format( metrics.accuracy_score(y_test, y_pred)))
 
 
 

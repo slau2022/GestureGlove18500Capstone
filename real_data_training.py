@@ -49,7 +49,12 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 
 save = False
- 
+
+from sklearn.exceptions import ConvergenceWarning 
+ConvergenceWarning('ignore')
+from warnings import filterwarnings
+filterwarnings('ignore')
+
 def label_to_num(l):
     if(len(l)==1):
         return ord(l)-96
@@ -80,7 +85,7 @@ def parse_data(labels, direc='real_data_oct26/'):
 
     return all_data
 
-def extract_data(df, no_mag=False):
+def extract_data(df, no_mag=False, name = "scaler_xxx.p"):
     if(no_mag): 
         df = df.drop(columns=['s7','s8','s9'])
     headers = df.columns.values
@@ -95,13 +100,13 @@ def extract_data(df, no_mag=False):
     X_train = scaler.transform(X_train.values) 
     X_test = scaler.transform(X_test.values)
 
-    if(save): pickle.dump(scaler,open("scaler_mag.p", "wb"))
+    if(save): pickle.dump(scaler,open("models/"+name, "wb"))
 
     return X_train, y_train, X_test, y_test
  
 
 
-def train_rf_model(X,y,X_test,y_test):
+def train_rf_model(X,y,X_test,y_test, name = "rf_model_xxx.p"):
     #random forest 
     rf_model = RandomForestClassifier(n_estimators=100).fit(X,y)
     y_pred = rf_model.predict(X_test) 
@@ -109,7 +114,7 @@ def train_rf_model(X,y,X_test,y_test):
     
     # print(classification_report(y_test,y_pred, labels=[21,22,23,24,27,28], target_names = ['u','v','w','x','space','transition']))
     
-    if(save):pickle.dump(rf_model,open("rf_model_mag.p", "wb")) 
+    if(save):pickle.dump(rf_model,open("models/"+name, "wb")) 
 
     # plot_confusion_matrix(rf_model,X_test,y_test, include_values=False,display_labels=labels)
     # t = rf_model.predict_proba(X[0:1]) 
@@ -117,15 +122,18 @@ def train_rf_model(X,y,X_test,y_test):
 
 def train_nn_model(X,y, X_test, y_test):
 
-    model = MLPClassifier(solver='lbfgs',alpha=1e-5, 
-        hidden_layer_sizes=(10,10,10,10,10),random_state=1, max_iter=1500)
+    model = MLPClassifier(solver='lbfgs',alpha=0.0001435385074058134, 
+        hidden_layer_sizes=(56, 113), activation='logistic', max_iter=1000)
     model.fit(X,y)
     y_pred = model.predict(X_test) 
     print("Neural net accuracy: ", metrics.accuracy_score(y_test,y_pred))
     # plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=labels)
-    #validation
-    #layer stuff: 
-    # 6 later -> 0.776
+    '''
+    NN w/ oct26 data w tr label 
+    MLPClassifier(activation='logistic', alpha=0.0001435385074058134,
+                  hidden_layer_sizes=(56, 113), max_iter=1000)
+    R2: 0.95115
+    '''
 
 def train_models(X,y,X_test,y_test): 
 
@@ -167,6 +175,8 @@ def train_models(X,y,X_test,y_test):
 
     print(X_test[0])
 if __name__ == "__main__":
+    save=False
+    data_path = 'real_data_oct26/'
     df_headers = ['f1','f2','f3','f4','f5','s1',
         's2','s3','s4','s5','s6','s7','s8','s9','label']
 
@@ -174,39 +184,31 @@ if __name__ == "__main__":
     labels = letters + ['space','transition']
     labels_no_tr = letters + ['space']
 
-    data = parse_data(labels,'real_data_oct26/')
-    data_no_tr = parse_data(labels_no_tr, 'real_data_oct26/')
+    data = parse_data(labels,data_path)
+    data_no_tr = parse_data(labels_no_tr, data_path)
 
     df = pd.DataFrame(data, columns = df_headers)
     df_no_tr = pd.DataFrame(data_no_tr, columns = df_headers)
 
-    all_data = extract_data(df) 
+    all_data = extract_data(df, name = "scaler_real1_all_data.p") 
     no_mag_data = extract_data(df, no_mag=True)
 
     all_data_no_tr = extract_data(df_no_tr) 
 
     
-    print("RF w/ oct26 data")
-    train_rf_model(*all_data)
-    print("RF w/ oct26 data w/o mag data")
-    train_rf_model(*no_mag_data)
-    print("RF w/ oct26 data w/o tr label")
-    train_rf_model(*all_data_no_tr)
-    print("NN w/ oct26 data w/o tr label")
+    # print("RF w/ " + data_path)
+    # train_rf_model(*all_data, name = "rf_model_real1_all_data.p")
+
+    # print("RF w/ oct30 data w/o mag data")
+    # train_rf_model(*no_mag_data)
+    # print("RF w/ oct30 data w/o tr label")
+    # train_rf_model(*all_data_no_tr)
+    print("NN w/ oct30 data w/o tr label")
     train_nn_model(*all_data_no_tr)
-
-    # train_rf_model(X_train,y_train,X_test,y_test)
-    # train_models(X_train,y_train,X_test,y_test)
  
-    #parsing number of letters -> boundaries ... todo
-    #try to classify just with random or with space
-
  
-
-    #todo: confusiong matrix, done
-    # neural net: 
-    #auto correct: 
-    #train without transisiont, done
+    #parsing number of letters -> boundaries ... todo 
+    #auto correct:  
     
 
 
