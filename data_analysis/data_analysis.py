@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-filename_fake = "../fake_data/simulated_train_data.csv"
+'''filename_fake = "../fake_data/simulated_train_data.csv"
 filename_real = "../real_data/l.npy"
 
 fake_data_full = np.genfromtxt(filename_fake, delimiter=" ", skip_header=1, dtype=float)
@@ -55,4 +55,55 @@ plt.ylabel("GyroscopeY")
 plt.title("Fake Data: Magnetometer")
 plt.scatter(fake_data[:, 11], fake_data[:, 12], s=fake_data[:, 13]*10)
 plt.savefig("fake_111213.png")
-plt.show()
+plt.show()'''
+
+p = np.load("real_data_oct26/p.npy")
+j = np.load("real_data_oct26/j.npy")
+
+plt.figure()
+plt.hist(p[:, 5])
+plt.savefig("oct26_p_accx.png")
+
+plt.figure()
+plt.hist(p[:, 6])
+plt.savefig("oct26_p_accy.png")
+
+plt.figure()
+plt.hist(p[:, 7])
+plt.savefig("oct26_p_accz.png")
+
+plt.figure()
+plt.hist(j[:, 5])
+plt.savefig("oct26_j_accx.png")
+
+plt.figure()
+plt.hist(j[:, 6])
+plt.savefig("oct26_j_accy.png")
+
+plt.figure()
+plt.hist(j[:, 7])
+plt.savefig("oct26_j_accz.png")
+
+plt.figure()
+plt.hist(p[:, 8])
+plt.savefig("oct26_p_gyrx.png")
+
+plt.figure()
+plt.hist(p[:, 9])
+plt.savefig("oct26_p_gyry.png")
+
+plt.figure()
+plt.hist(p[:, 10])
+plt.savefig("oct26_p_gyrz.png")
+
+plt.figure()
+plt.hist(j[:, 8])
+plt.savefig("oct26_j_gyrx.png")
+
+plt.figure()
+plt.hist(j[:, 9])
+plt.savefig("oct26_j_gyry.png")
+
+plt.figure()
+plt.hist(j[:, 10])
+plt.savefig("oct26_j_gyrz.png")
