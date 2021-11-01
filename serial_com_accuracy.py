@@ -39,9 +39,9 @@ label_index = 0
 correct = 0
 total = 0
 accuracies = dict()
-while True and label_index < len(labels): 
+while (True and label_index < len(labels)): 
     curr_label = labels[label_index]
-    print("Caclulating accuracy for: ", curr_label)   
+     
     if (keyboard.is_pressed("esc")):
         break
     elif(keyboard.is_pressed("enter")):
@@ -50,6 +50,8 @@ while True and label_index < len(labels):
         label_index+=1
         correct = 0
         total = 0
+
+        print("Caclulating accuracy for: ", labels[label_index] )  
        
 
     try:
@@ -106,6 +108,10 @@ while True and label_index < len(labels):
                 pass
     elif (data == "begin"):
         going = True
+
+w = csv.writer(open("accuracies.csv", "w")) 
+for key, val in accuracies.items(): 
+    w.writerow([key, val])
 
 end = time.time()
 print("All serial rate:", (successes + fails)/(end - start), "data/s")
