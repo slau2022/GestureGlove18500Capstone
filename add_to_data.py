@@ -9,7 +9,7 @@ letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
 labels = letters + ['space','random']
 gesture_name = "a"
 gesture_ind = 0
-directory = "real_better_data/"
+directory = "real_data_oct30/"
 
 going = False
 data_point = []

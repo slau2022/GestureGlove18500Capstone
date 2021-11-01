@@ -22,8 +22,8 @@ arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.
 
 mag = True
 
-model = pickle.load(open("rf_model_mag.p", "rb"))
-scaler = pickle.load(open("scaler_mag.p", "rb"))
+model = pickle.load(open("models/rf_model_oct30_all_data.p", "rb"))
+scaler = pickle.load(open("models/scaler_oct30_all_data.p", "rb"))
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 labels = letters + ['space','random']
