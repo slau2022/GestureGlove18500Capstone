@@ -22,8 +22,8 @@ arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.
 
 mag = True
 
-model = pickle.load(open("rf_model_oct30_all_data.p", "rb"))
-scaler = pickle.load(open("scaler_oct30_all_data.p", "rb"))
+model = pickle.load(open("models/rf_model_oct26_all_data.p", "rb"))
+scaler = pickle.load(open("models/scaler_oct26_all_data.p", "rb"))
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 labels = letters + ['space','random']
@@ -40,16 +40,18 @@ correct = 0
 total = 0
 accuracies = dict()
 while True and label_index < len(labels): 
-    curr_label = labels[label_index]
-    print("Caclulating accuracy for: ", curr_label)   
+    curr_label = labels[label_index] 
     if (keyboard.is_pressed("esc")):
         break
-    elif(keyboard.is_pressed("enter")):
-        accuracies[curr_label] = [ correct/total,correct, total]
+    elif(keyboard.is_pressed("enter") and total!=0):
+        print(correct,total)
+        accuracies[curr_label] = [ correct/(total+1),correct, total]
         print(f'Accuracy for {curr_label} is {correct/total*100:.2f}%')
         label_index+=1
         correct = 0
         total = 0
+
+        print("Caclulating accuracy for: ", labels[label_index])  
        
 
     try:
