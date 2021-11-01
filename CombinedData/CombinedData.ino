@@ -170,8 +170,7 @@ void loop() {
                      gyro.gyro.x, gyro.gyro.y, gyro.gyro.z};
 
   Serial.println("\nbegin");
-  Serial.print("\n");
-  String sendstr = "";
+  String sendstr = "\n";
   for (int i = 0; i < 14; i++) {
     if (i < 13) {
       sendstr = String(sendstr + String(to_send[i]) + ", ");
