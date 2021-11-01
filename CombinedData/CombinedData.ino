@@ -170,10 +170,17 @@ void loop() {
                      gyro.gyro.x, gyro.gyro.y, gyro.gyro.z};
 
   Serial.println("\nbegin");
+  Serial.print("\n");
+  String sendstr = "";
   for (int i = 0; i < 14; i++) {
-    Serial.print("\n");
-    Serial.print(to_send[i]);
+    if (i < 13) {
+      sendstr = String(sendstr + String(to_send[i]) + ", ");
+    } else {
+      sendstr = String(sendstr + String(to_send[i]));
+    }
   }
+      
+  Serial.print(sendstr);
   Serial.print("\nend");
   
   /*Serial.print("\t\tThumb angle: ");          
