@@ -130,6 +130,8 @@ void setup() {
 }
 
 void loop() {
+  delay(100);
+
   sensors_event_t accel;
   sensors_event_t gyro;
   sensors_event_t mag;
@@ -164,12 +166,22 @@ void loop() {
   float angle_Pinky = map(flexR_Pinky, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
                    0, 90.0);
 
+  String sendstr = String(angle_Thumb) + "," + String(angle_Index) + "," + String(angle_Middle)
+                   + "," + String(angle_Ring) + "," + String(angle_Pinky) 
+                   + "," + String(accel.acceleration.x) + "," + String(accel.acceleration.y)
+                   + "," + String(accel.acceleration.z) + "," + String(gyro.gyro.x) + "," +
+                   String(gyro.gyro.y) + "," + String(gyro.gyro.z) + "," + String(mag.magnetic.x)
+                   + "," + String(mag.magnetic.y) + "," + String(mag.magnetic.z);
+  
+  Serial.print("\n" + sendstr + "\n");
+
+  
   float to_send[] = {angle_Thumb, angle_Index, angle_Middle, angle_Ring, angle_Pinky, 
                      accel.acceleration.x, accel.acceleration.y, accel.acceleration.z,
                      mag.magnetic.x, mag.magnetic.y, mag.magnetic.z,
                      gyro.gyro.x, gyro.gyro.y, gyro.gyro.z};
 
-  Serial.println("\nbegin");
+  /*
   String sendstr = "\n";
   for (int i = 0; i < 14; i++) {
     if (i < 13) {
@@ -180,7 +192,7 @@ void loop() {
   }
       
   Serial.print(sendstr);
-  Serial.print("\nend");
+  */
   
   /*Serial.print("\t\tThumb angle: ");          
   Serial.print(angle_Thumb);
@@ -220,7 +232,6 @@ void loop() {
   Serial.println(" radians/s ");
   Serial.println(); */
 
-  delay(100);
   // put your main code here, to run repeatedly:
 
 }
