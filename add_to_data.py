@@ -7,8 +7,8 @@ arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 labels = letters + ['space','random']
-gesture_name = "a"
-gesture_ind = 0
+gesture_name = "g"
+gesture_ind = 6
 directory = "window3/"
 
 vector_len = 14
@@ -100,5 +100,5 @@ while (True):
             all_data.append(data_point)
         data_point = []
 
-data_point = []
-all_data = list(np.load(directory + gesture_name + ".npy"))
+all_data = np.array(all_data)
+np.save(directory + gesture_name + ".npy", all_data)
