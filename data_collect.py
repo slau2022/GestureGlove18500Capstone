@@ -117,4 +117,5 @@ while (True):
             all_data.append(data_point)
         data_point = []
 
-    
+all_data = np.array(all_data)
+np.save(directory + gesture_name + ".npy", all_data)

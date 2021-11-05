@@ -9,9 +9,12 @@ letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
 labels = letters + ['space','random']
 gesture_name = "a"
 gesture_ind = 0
-directory = "real_data_oct30/"
+directory = "window3/"
 
-going = False
+vector_len = 14
+window_size = 3
+
+'''going = False
 data_point = []
 
 all_data = list(np.load(directory + gesture_name + ".npy"))
@@ -58,4 +61,44 @@ while (True):
         going = True
 
 all_data = np.array(all_data)
-np.save(directory + gesture_name + ".npy", all_data)
+np.save(directory + gesture_name + ".npy", all_data)'''
+
+data_point = []
+all_data = list(np.load(directory + gesture_name + ".npy"))
+
+print("COLLECTING FOR LABEL", gesture_name)
+print("Go")
+
+while (True):
+    if (keyboard.is_pressed("esc")):
+        if (gesture_ind == 27):
+            break
+        else:
+            all_data = np.array(all_data)
+            np.save(directory + gesture_name + ".npy", all_data)
+            gesture_ind += 1
+            gesture_name = labels[gesture_ind]
+            try:
+                all_data = list(np.load(directory + gesture_name + ".npy"))
+            except:
+                all_data = []
+            print("COLLECTING FOR LABEL", gesture_name)
+            time.sleep(3)
+            print("Go")
+    try:
+        data = arduino.readline().decode('utf-8').strip()
+    except:
+        data = ""
+    data = data.strip().split(",")
+    if (len(data) == vector_len):
+        for i in range(vector_len):
+            data[i] = float(data[i])
+        data_point.extend(data)
+    if (len(data_point) == vector_len*window_size):
+        if (keyboard.is_pressed("space")):
+            print(data_point)
+            all_data.append(data_point)
+        data_point = []
+
+data_point = []
+all_data = list(np.load(directory + gesture_name + ".npy"))
