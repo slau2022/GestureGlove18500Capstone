@@ -116,28 +116,35 @@ def oct26_uw():
     w = np.load("../real_data_oct26/w.npy")
     dataset = 'oct26_uw'
     
-    #fingers
-    plt.figure() 
-    fig = plt.figure()
-    ax = fig.add_subplot(projection='3d')
-    # plt.hist( [w[:, 2],u[:, 2]], label=['u','w'])
-    # plt.legend(loc='upper right') 
+    #fingers 
+    # fig = plt.figure()
+    # ax = fig.add_subplot(projection='3d')
+    # # plt.hist( [w[:, 2],u[:, 2]], label=['u','w'])
+    # # plt.legend(loc='upper right') 
      
-    plt.scatter( u[:,0], u[:,1], u[:,2], c='b',marker='o', label='u')
-    plt.scatter( w[:,0], w[:,1], w[:,2], c='r', marker='x', label='w')
-    plt.xlim(100,300)
-    plt.ylim(100,300)  
-    plt.savefig("oct26_uw_fing1-3.png")
+    # plt.scatter( u[:,0], u[:,1], u[:,2], c='b',marker='o', label='u')
+    # plt.scatter( w[:,0], w[:,1], w[:,2], c='r', marker='x', label='w')
+    # plt.xlim(100,300)
+    # plt.ylim(100,300)  
+    # plt.savefig("oct26_uw_fing1-3.png")
+ 
 
-    plt.figure() 
-    fig = plt.figure()  
-    plt.scatter( u[:,3], u[:,4],   c='b',marker='o', label='u')
-    plt.scatter( w[:,3], w[:,4],   c='r', marker='x', label='w')
-    plt.xlim(100,300)
-    plt.ylim(100,300)  
-    plt.show()
-    exit()
-    plt.savefig("oct26_uw_fing1-3.png")
+    # plt.figure()  
+    # plt.hist([u[:,0],w[:,0]]) 
+    # plt.figure()  
+    # plt.hist([u[:,1],w[:,1]]) 
+    # plt.figure()  
+    # plt.hist([u[:,2],w[:,2]]) 
+    plt.figure()  
+    plt.hist([u[:,2],w[:,2]]) 
+
+    plt.savefig("oct26_uw_fing3_hist.png")
+    plt.figure()
+    plt.scatter( u[:,2], [0]*len(u[:,2]),   c='b',marker='o', label='u')
+    plt.scatter( w[:,2], [1]*len(w[:,2]),   c='r', marker='x', label='w')
+    # plt.xlim(0,300)
+    # plt.ylim(0,300)   
+    plt.savefig("oct26_uw_fing3_scatter.png")
 
     #acc
 
