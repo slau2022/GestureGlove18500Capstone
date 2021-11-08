@@ -6,7 +6,6 @@ import pickle
 from sklearn.preprocessing import StandardScaler  
 import time
 import os
-from gtts import gTTS
 from playsound import playsound
 
 '''
@@ -23,8 +22,6 @@ z + l
 
 arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.1)
 
-mag = True
-
 model_nn = pickle.load(open("models/nn_model_nov5_all_data.p", "rb"))
 model_rf = pickle.load(open("models/rf_model_nov5_all_data.p", "rb"))
 scaler = pickle.load(open("models/scaler_nov5_all_data.p", "rb"))
@@ -39,9 +36,6 @@ vector_len = 14
 window_size = 3
 
 successes = 0
-
-speech = gTTS(text = "a", lang = "en", slow = False)
-speech.save("a.mp3")
 
 start = time.time()
 '''while True: 
@@ -118,14 +112,13 @@ while (True):
         probabilities_rf = model_rf.predict_proba(data_point)
         pred_rf = np.argmax(probabilities_rf)
         if (probabilities_rf[0, pred_rf] > 0.25 and pred_rf != 27 and pred_rf != 26):
-            if (pred_rf == 0):
-                playsound("a.mp3")
+            playsound("audio_files/" + labels[pred_rf] + ".mp3")
             print(labels[pred_rf].upper())
-            #arduino.write("go", "utf-8")
         else:
             print("-")
         data_point = []
         successes += 1
+        arduino.write("go", "utf-8")
 
 end = time.time()
 
