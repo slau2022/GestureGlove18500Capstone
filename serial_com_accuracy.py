@@ -45,12 +45,13 @@ accuracies = dict()
 
 while (True and label_index < len(labels)): 
     curr_label = labels[label_index]
+    y_pred = list()
       
     if (keyboard.is_pressed("esc")):
         break
     elif(keyboard.is_pressed("enter") and total!=0):
         print(correct,total)
-        accuracies[curr_label] = [ correct/(total+1),correct, total]
+        accuracies[curr_label] = [ y_pred,correct/(total),correct, total]
         print(f'Accuracy for {curr_label} is {correct/total*100:.2f}%')
         label_index+=1
         correct = 0
@@ -76,6 +77,7 @@ while (True and label_index < len(labels)):
             data_point = scaler.transform(data_point)
             probabilities = model.predict_proba(data_point)
             pred = np.argmax(probabilities)
+            y_pred.append(labels[pred]) #for cm 
             if (probabilities[0, pred] > 0.25 and pred != 27):
                 print(labels[pred])
                 if(labels[pred] == curr_label):
