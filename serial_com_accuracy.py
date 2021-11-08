@@ -68,12 +68,9 @@ while (True and label_index < len(labels)):
         for i in range(vector_len):
             data[i] = float(data[i])
         data_point.extend(data)
-        successes += 1
-    else:
-        fails += 1
+
     
     if (len(data_point) == vector_len*window_size):
-        print("hello")
         if (keyboard.is_pressed("space")):
             data_point = np.array(data_point).reshape(1, -1)
             data_point = scaler.transform(data_point)
@@ -85,8 +82,8 @@ while (True and label_index < len(labels)):
                     correct+=1
             else:
                 print("-")
-            data_point = []
             total += 1
+        data_point = []
     
     '''try:
         data = arduino.readline().decode('utf-8').strip()
@@ -146,8 +143,3 @@ while (True and label_index < len(labels)):
 w = csv.writer(open("accuracies.csv", "w")) 
 for key, val in accuracies.items(): 
     w.writerow([key, val])
-
-end = time.time()
-print("All serial rate:", (successes + fails)/(end - start), "data/s")
-print("Success serial rate", successes/(end - start), "data/s")
-print("Data fail rate", fails/(successes + fails))

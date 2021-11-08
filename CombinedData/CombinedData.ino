@@ -173,7 +173,7 @@ void loop() {
                    String(gyro.gyro.y) + "," + String(gyro.gyro.z) + "," + String(mag.magnetic.x)
                    + "," + String(mag.magnetic.y) + "," + String(mag.magnetic.z);
   
-  Serial.print("\n" + sendstr + "\n");
+  Serial.print("\n" + sendstr);
 
   
   float to_send[] = {angle_Thumb, angle_Index, angle_Middle, angle_Ring, angle_Pinky, 

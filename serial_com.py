@@ -5,6 +5,7 @@ import sklearn
 import pickle
 from sklearn.preprocessing import StandardScaler  
 import time
+import os
 
 '''
 COMMONLY CONFUSED LETTERS:
@@ -22,7 +23,8 @@ arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.
 
 mag = True
 
-model = pickle.load(open("models/rf_model_nov5_all_data.p", "rb"))
+model_nn = pickle.load(open("models/nn_model_nov5_all_data.p", "rb"))
+model_rf = pickle.load(open("models/rf_model_nov5_all_data.p", "rb"))
 scaler = pickle.load(open("models/scaler_nov5_all_data.p", "rb"))
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
@@ -35,7 +37,6 @@ vector_len = 14
 window_size = 3
 
 successes = 0
-fails = 0
 
 start = time.time()
 '''while True: 
@@ -105,21 +106,30 @@ while (True):
         for i in range(vector_len):
             data[i] = float(data[i])
         data_point.extend(data)
-        successes += 1
-    else:
-        fails += 1
+
     if (len(data_point) == vector_len*window_size):
         data_point = np.array(data_point).reshape(1, -1)
         data_point = scaler.transform(data_point)
-        probabilities = model.predict_proba(data_point)
-        pred = np.argmax(probabilities)
-        if (probabilities[0, pred] > 0.25 and pred != 27):
-            print(labels[pred])
+        probabilities_rf = model_rf.predict_proba(data_point)
+        pred_rf = np.argmax(probabilities_rf)
+        if (probabilities_rf[0, pred_rf] > 0.25 and pred_rf != 27 and pred_rf != 26):
+            print(labels[pred_rf].upper())
         else:
             print("-")
         data_point = []
+        successes += 1
 
 end = time.time()
-print("All serial rate:", ((successes + fails)//window_size)/(end - start), "data/s")
-print("Success serial rate", successes/(end - start), "data/s")
-print("Data fail rate", fails/(successes + fails))
+
+pred_rate = successes/(end - start)
+print("Prediction rate:", pred_rate)
+
+data_file = "serial_com_data.txt"
+if (not os.path.exists(data_file)):
+    f = open(data_file, "w")
+    f.write("Prediction rate: " + str(pred_rate) + "predictions/sec\n\n")
+    f.close()
+else:
+    f = open(data_file, "a")
+    f.write("Prediction rate: " + str(pred_rate) + "predictions/sec\n\n")
+    f.close()
