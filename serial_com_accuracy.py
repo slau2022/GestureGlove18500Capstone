@@ -23,17 +23,19 @@ arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.
 
 mag = True
 
-model = pickle.load(open("models/rf_model_oct26_all_data.p", "rb"))
-scaler = pickle.load(open("models/scaler_oct26_all_data.p", "rb"))
+model = pickle.load(open("models/rf_model_nov5_all_data.p", "rb"))
+scaler = pickle.load(open("models/scaler_nov5_all_data.p", "rb"))
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-labels = letters + ['space','random']
+labels = letters + ['space','transition']
 
 going = False
 data_point = []
 
 successes = 0
 fails = 0
+vector_len = 14
+window_size = 3
 
 start = time.time()
 label_index = 0
@@ -56,8 +58,37 @@ while (True and label_index < len(labels)):
  
         print("Caclulating accuracy for: ", labels[label_index])   
        
-
     try:
+        data = arduino.readline().decode('utf-8').strip()
+    except:
+        data = ""
+    #print(data)
+    data = data.strip().split(",")
+    if (len(data) == vector_len):
+        for i in range(vector_len):
+            data[i] = float(data[i])
+        data_point.extend(data)
+        successes += 1
+    else:
+        fails += 1
+    
+    if (len(data_point) == vector_len*window_size):
+        print("hello")
+        if (keyboard.is_pressed("space")):
+            data_point = np.array(data_point).reshape(1, -1)
+            data_point = scaler.transform(data_point)
+            probabilities = model.predict_proba(data_point)
+            pred = np.argmax(probabilities)
+            if (probabilities[0, pred] > 0.25 and pred != 27):
+                print(labels[pred])
+                if(labels[pred] == curr_label):
+                    correct+=1
+            else:
+                print("-")
+            data_point = []
+            total += 1
+    
+    '''try:
         data = arduino.readline().decode('utf-8').strip()
     except:
         data = ""
@@ -110,7 +141,7 @@ while (True and label_index < len(labels)):
             except: 
                 pass
     elif (data == "begin"):
-        going = True
+        going = True'''
 
 w = csv.writer(open("accuracies.csv", "w")) 
 for key, val in accuracies.items(): 

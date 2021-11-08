@@ -6,9 +6,9 @@ import time
 arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.1)
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-labels = letters + ['space','random']
-gesture_name = "g"
-gesture_ind = 6
+labels = letters + ['space','transition']
+gesture_name = "a"
+gesture_ind = 0
 directory = "window3/"
 
 vector_len = 14
