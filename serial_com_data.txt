@@ -28,3 +28,73 @@ Prediction rate: 3.021579684404929predictions/sec
 
 Prediction rate: 3.0480693967974726predictions/sec
 
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.27368652884045164predictions/sec
+
+Prediction rate: 0.2714558430987629predictions/sec
+
+Prediction rate: 0.2743705266436018predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.29158697550604895predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.15271623118902944predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 17.83691438455291predictions/sec
+
+Prediction rate: 18.982579632885937predictions/sec
+
+Prediction rate: 17.220500913363477predictions/sec
+

@@ -35,6 +35,7 @@ const float BEND_RESISTANCE = 90000.0; // resistance at 90 deg
 
 void setup() {
   Serial.begin(115200);
+  Serial.flush();
   while (!Serial)
     delay(10); // will pause Zero, Leonardo, etc until serial console opens
 
@@ -130,9 +131,10 @@ void setup() {
 }
 
 void loop() {
-  while (!Serial.available());
-  String read_in = Serial.readString();
-  if (read_in == "go") {
+  delay(10);
+  //while (!Serial.available());
+  //String read_in = Serial.readString();
+  //if (read_in == "go") {
     sensors_event_t accel;
     sensors_event_t gyro;
     sensors_event_t mag;
@@ -174,8 +176,8 @@ void loop() {
                      String(gyro.gyro.y) + "," + String(gyro.gyro.z) + "," + String(mag.magnetic.x)
                      + "," + String(mag.magnetic.y) + "," + String(mag.magnetic.z);
     
-    Serial.print("\n" + sendstr);
-  }
+    Serial.println(sendstr);
+  //}
 
  
   /*

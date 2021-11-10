@@ -92,7 +92,7 @@ start = time.time()
         going = True'''
 
 data_point = []
-
+#arduino.write(bytes("go", "utf-8"))
 while (True):
     if (keyboard.is_pressed("esc")):
         break
@@ -100,25 +100,28 @@ while (True):
         data = arduino.readline().decode('utf-8').strip()
     except:
         data = ""
-    data = data.strip().split(",")
-    if (len(data) == vector_len):
-        for i in range(vector_len):
-            data[i] = float(data[i])
-        data_point.extend(data)
-
-    if (len(data_point) == vector_len*window_size):
-        data_point = np.array(data_point).reshape(1, -1)
-        data_point = scaler.transform(data_point)
-        probabilities_rf = model_rf.predict_proba(data_point)
-        pred_rf = np.argmax(probabilities_rf)
-        if (probabilities_rf[0, pred_rf] > 0.25 and pred_rf != 27 and pred_rf != 26):
-            playsound("audio_files/" + labels[pred_rf] + ".mp3")
-            print(labels[pred_rf].upper())
-        else:
-            print("-")
+    try:
+        data = data.strip().split(",")
+        if (len(data) == vector_len):
+            for i in range(vector_len):
+                    data[i] = float(data[i])
+            data_point.extend(data)
+        else: continue
+        if (len(data_point) == vector_len*window_size):
+            data_point = np.array(data_point).reshape(1, -1)
+            data_point = scaler.transform(data_point)
+            probabilities_rf = model_rf.predict_proba(data_point)
+            pred_rf = np.argmax(probabilities_rf)
+            if (probabilities_rf[0, pred_rf] > 0.25 and pred_rf != 27 and pred_rf != 26):
+                #playsound("audio_files/" + labels[pred_rf] + ".mp3")
+                print(labels[pred_rf].upper())
+            else:
+                print("-")
+            data_point = []
+            successes += 1
+    except:
         data_point = []
-        successes += 1
-        arduino.write("go", "utf-8")
+    #arduino.write(bytes("go", "utf-8"))
 
 end = time.time()
 
