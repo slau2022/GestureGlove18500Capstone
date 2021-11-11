@@ -7,14 +7,14 @@ import os
 
 arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.1)
 
-directory = "window3/"
+directory = "rachel_roommates/"
 if (not os.path.isdir(directory)):
     os.mkdir(directory)
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-labels = letters + ['space','random']
-gesture_name = "g"
-gesture_ind = 6
+labels = letters + ['space','transition']
+gesture_name = "a"
+gesture_ind = 0
 vector_len = 14
 window_size = 3
 

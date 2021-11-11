@@ -9,7 +9,7 @@ letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
 labels = letters + ['space','transition']
 gesture_name = "a"
 gesture_ind = 0
-directory = "window3/"
+directory = "rachel_roommates/"
 
 vector_len = 14
 window_size = 3
