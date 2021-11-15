@@ -44,7 +44,7 @@ def label_to_num(l):
 
 def num_to_label(n):
     if(n<27):
-        return chr(n+97)
+        return chr(n+96)
     elif(n==27):
         return 'space'
     else: 
@@ -128,14 +128,19 @@ def train_rf_model(X,y,X_test,y_test, name = "rf_model_xxx.p"):
     # t = rf_model.predict_proba(X[0:1]) 
     # plt.show()
 
-def train_nn_model(X,y, X_test, y_test):
+def train_nn_model(X,y, X_test, y_test, name = "nn_model_xxx.p"):
 
-    model = MLPClassifier(solver='lbfgs',alpha=0.0001435385074058134, 
-        hidden_layer_sizes=(56, 113), activation='logistic', max_iter=1000)
-    model.fit(X,y)
-    y_pred = model.predict(X_test) 
+    # model = MLPClassifier(solver='lbfgs',alpha=0.0001435385074058134, 
+    #     hidden_layer_sizes=(56, 113), activation='logistic', max_iter=1000)
+    nn_model = MLPClassifier(alpha=0.00037009903911428525, hidden_layer_sizes=(134, 25), learning_rate='adaptive', max_iter=1500, solver='lbfgs')
+    nn_model.fit(X,y)
+    y_pred = nn_model.predict(X_test) 
     print("Neural net accuracy: ", metrics.accuracy_score(y_test,y_pred))
-    # plot_confusion_matrix(model,X_test,y_test, include_values=False,display_labels=labels)
+
+    if(save): pickle.dump(nn_model, open("models/"+name, "wb"))
+    plot_confusion_matrix(nn_model,X_test,y_test, include_values=False,display_labels=labels)
+    plt.show() 
+    exit()
     '''
     NN w/ oct26 data w tr label 
     MLPClassifier(activation='logistic', alpha=0.0001435385074058134,
@@ -195,7 +200,7 @@ def make_headers(headers):
 
 
 if __name__ == "__main__":
-    save=True
+    save=False
     data_path = 'real_data_nov5_window3/'
     df_headers = ['f1','f2','f3','f4','f5','s1',
         's2','s3','s4','s5','s6','s7','s8','s9'] 
@@ -225,9 +230,16 @@ if __name__ == "__main__":
     train_rf_model(*all_data, name = "rf_model_nov5_all_data.p")
 
     print("RF w/ no tr " + data_path)
-    train_rf_model(*all_data, name = "rf_model_nov5_no_tr.p")
+    train_rf_model(*all_data_no_tr, name = "rf_model_nov5_no_tr.p")
 
-    train_models(*all_data)
+    print("NN w/ " + data_path)
+    train_nn_model(*all_data, name = "nn_model_nov5_all_data.p")
+
+    print("NN w/ no tr " + data_path)
+    train_nn_model(*all_data_no_tr, name = "nn_model_nov5_no_tr.p")
+
+    # train_models(*all_data)
+
     # print("RF w/ oct30 data w/o mag data")
     # train_rf_model(*no_mag_data)
     # print("RF w/ oct30 data w/o tr label")

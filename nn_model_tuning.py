@@ -44,21 +44,41 @@ def num_to_label(n):
         return 'space'
     else: 
         return 'transition'
+#go thru each sample, if value in sample > 500 (outlier) 
+def remove_outliers(data):
+    r,c = data.shape
+    #data[0] = row; data[:,0] = column 
+    # print(type(data))
+    to_del = list()
+    for i in range(0,r):
+        row = data[i]
+        for val in row:
+            if(val>=500):
+                to_del.append(i)
+                break 
 
+
+    new_data = np.delete(data, to_del, axis=0) #delete row
+ 
+
+    return new_data
 def parse_data(labels, direc='real_data_oct26/'):  
-    all_data = np.empty((0,15))
+    data_len = 14*3+1
+    all_data = np.empty((0,data_len))
     #parse label data
     for l in labels: 
         l_file = direc+l+'.npy'
         l_data = np.load(l_file)
-        r, c = l_data.shape 
+        l_data = remove_outliers(l_data)
+
+        r, c = l_data.shape  
+
         l_data = np.append(l_data, np.ones((r,1))*label_to_num(l), axis=-1)
      
         all_data = np.vstack((all_data, l_data))
 
 
     return all_data
-
 #extract training and testing data from a df
 def extract_data(df, no_mag=False):
     if(no_mag): 
@@ -79,6 +99,17 @@ def extract_data(df, no_mag=False):
 
     return X_train, y_train, X_test, y_test
  
+def make_headers(headers):
+    new_header = list()
+    count=1
+    window_size=3
+    while(count<window_size):
+
+        for h in headers:
+            temp = h+"_"+str(count)
+            new_header.append(temp)
+        count+=1
+    return headers+new_header
 
 
 def train_nn_model(X,y,X_test, y_test):
@@ -138,32 +169,38 @@ if __name__ == "__main__":
     df_headers = ['f1','f2','f3','f4','f5','s1',
         's2','s3','s4','s5','s6','s7','s8','s9','label']
 
+    data_path = 'real_data_nov5_window3/'
+    df_headers = ['f1','f2','f3','f4','f5','s1',
+        's2','s3','s4','s5','s6','s7','s8','s9'] 
+    df_headers = make_headers(df_headers)
+    df_headers = df_headers + ['label']
+
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     labels = letters + ['space','transition']
     labels_no_tr = letters + ['space']
  
-    data = parse_data(labels,'real_data_oct26/')
-    data_no_tr = parse_data(labels_no_tr, 'real_data_oct26/')
-    data_letters = parse_data(letters,'real_data_oct26/')
+    data = parse_data(labels,'real_data_nov5_window3/')
+    data_no_tr = parse_data(labels_no_tr, 'real_data_nov5_window3/')
+    data_letters = parse_data(letters,'real_data_nov5_window3/')
 
     df = pd.DataFrame(data, columns = df_headers)
     df_no_tr = pd.DataFrame(data_no_tr, columns = df_headers)
     df_letters = pd.DataFrame(data_letters, columns = df_headers)
 
     all_data = extract_data(df) 
-    no_mag_data = extract_data(df, no_mag=True)
+    # no_mag_data = extract_data(df, no_mag=True)
 
     data_no_tr = extract_data(df_no_tr) 
     data_letters = extract_data(df_letters) 
 
     
-    print("NN w/ oct26 data w tr label") 
+    print("NN w/ nov5 data w tr label") 
     tune_nn_model(*all_data, "nn_tuning_all_data")
  
-    print("NN w/ oct26 data w/o tr label") 
+    print("NN w/ nov5 data w/o tr label") 
     tune_nn_model(*data_no_tr, "nn_tuning_no_tr")
 
-    print("NN w/ oct26 data w/ only letters")
+    print("NN w/ nov5 data w/ only letters")
     tune_nn_model(*data_letters, "nn_tuning_letters")
 
 

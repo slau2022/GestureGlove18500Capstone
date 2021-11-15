@@ -220,12 +220,11 @@ if __name__ == "__main__":
 
     df1 = pd.DataFrame(data = data1, columns = df_headers)
     df2 = pd.DataFrame(data = data2, columns = df_headers)
-    
-    letters_data1 = extract_data(df1, name = "scaler_letters1.p") 
-    letters_data2 = extract_data(df2, name = "scaler_letters1.p") 
- 
 
     save=True
+    letters_data1 = extract_data(df1, name = "scaler_ruvw.p") 
+    letters_data2 = extract_data(df2, name = "scaler_mnste.p") 
+ 
     print("RF w/ " + ','.join(letters1))
     train_rf_model(*letters_data1, name = "rf_model_ruvw.p") 
 

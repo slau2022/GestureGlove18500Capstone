@@ -64,13 +64,15 @@ if __name__ == "__main__":
     labels = letters + ['space','transition']
     labels_no_tr = letters + ['space']
 
+    #testing data
     data = parse_data(labels,'real_data_oct26/')
     df = pd.DataFrame(data, columns = df_headers)
     X, y = split_data(df)
 
-
-    model = pickle.load(open("models/rf_model_real1_all_data.p", "rb"))
-    scaler = pickle.load(open("models/scaler_real1_all_data.p", "rb")) 
+    #trained models
+    model = pickle.load(open("models/rf_model_oct30_all_data.p", "rb"))
+    scaler = pickle.load(open("models/scaler_oct30_all_data.p", "rb")) 
+    #testing
     X = scaler.transform(X)
     y_pred = model.predict(X)
     print("Testing Accuracy: ", metrics.accuracy_score(y,y_pred))

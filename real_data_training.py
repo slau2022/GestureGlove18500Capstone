@@ -65,11 +65,13 @@ def label_to_num(l):
 
 def num_to_label(n):
     if(n<27):
-        return chr(n+97)
+        return chr(n+96)
     elif(n==27):
         return 'space'
     else: 
         return 'transition'
+
+ 
 
 def parse_data(labels, direc='real_data_oct26/'):  
     all_data = np.empty((0,15))
@@ -175,8 +177,8 @@ def train_models(X,y,X_test,y_test):
 
     print(X_test[0])
 if __name__ == "__main__":
-    save=False
-    data_path = 'real_data_oct26/'
+    save=True
+    data_path = 'real_data_oct30/'
     df_headers = ['f1','f2','f3','f4','f5','s1',
         's2','s3','s4','s5','s6','s7','s8','s9','label']
 
@@ -190,21 +192,21 @@ if __name__ == "__main__":
     df = pd.DataFrame(data, columns = df_headers)
     df_no_tr = pd.DataFrame(data_no_tr, columns = df_headers)
 
-    all_data = extract_data(df, name = "scaler_real1_all_data.p") 
+    all_data = extract_data(df, name = "scaler_oct30_all_data.p") 
     no_mag_data = extract_data(df, no_mag=True)
 
     all_data_no_tr = extract_data(df_no_tr) 
 
     
-    # print("RF w/ " + data_path)
-    # train_rf_model(*all_data, name = "rf_model_real1_all_data.p")
+    print("RF w/ " + data_path)
+    train_rf_model(*all_data, name = "rf_model_oct30_all_data.p")
 
     # print("RF w/ oct30 data w/o mag data")
     # train_rf_model(*no_mag_data)
     # print("RF w/ oct30 data w/o tr label")
     # train_rf_model(*all_data_no_tr)
-    print("NN w/ oct30 data w/o tr label")
-    train_nn_model(*all_data_no_tr)
+    # print("NN w/ oct30 data w/o tr label")
+    # train_nn_model(*all_data_no_tr)
  
  
     #parsing number of letters -> boundaries ... todo 
