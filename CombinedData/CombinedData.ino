@@ -132,50 +132,50 @@ void setup() {
 
 void loop() {
   delay(10);
+  sensors_event_t accel;
+  sensors_event_t gyro;
+  sensors_event_t mag;
+  sensors_event_t temp;
+  
+  icm.getEvent(&accel, &gyro, &temp, &mag);
+  
+  value_Thumb = analogRead(flexPin_Thumb);
+  value_Index = analogRead(flexPin_Index);
+  value_Middle = analogRead(flexPin_Middle);
+  value_Ring = analogRead(flexPin_Ring);
+  value_Pinky = analogRead(flexPin_Pinky);
+
+  float flexV_Thumb = value_Thumb * VCC / 1023.0;
+  float flexR_Thumb = R_DIV * (VCC / flexV_Thumb - 1.0);
+  float angle_Thumb = map(flexR_Thumb, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
+                   0, 90.0);
+  float flexV_Index = value_Index * VCC / 1023.0;
+  float flexR_Index = R_DIV * (VCC / flexV_Index - 1.0);
+  float angle_Index = map(flexR_Index, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
+                   0, 90.0);
+  float flexV_Middle = value_Middle * VCC / 1023.0;
+  float flexR_Middle = R_DIV * (VCC / flexV_Middle - 1.0);
+  float angle_Middle = map(flexR_Middle, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
+                   0, 90.0);
+  float flexV_Ring = value_Ring * VCC / 1023.0;
+  float flexR_Ring = R_DIV * (VCC / flexV_Index - 1.0);
+  float angle_Ring = map(flexR_Ring, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
+                   0, 90.0);
+  float flexV_Pinky = value_Pinky * VCC / 1023.0;
+  float flexR_Pinky = R_DIV * (VCC / flexV_Pinky - 1.0);
+  float angle_Pinky = map(flexR_Pinky, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
+                   0, 90.0);
+
+  String sendstr = String(angle_Thumb) + "," + String(angle_Index) + "," + String(angle_Middle)
+                   + "," + String(angle_Ring) + "," + String(angle_Pinky) 
+                   + "," + String(accel.acceleration.x) + "," + String(accel.acceleration.y)
+                   + "," + String(accel.acceleration.z) + "," + String(gyro.gyro.x) + "," +
+                   String(gyro.gyro.y) + "," + String(gyro.gyro.z) + "," + String(mag.magnetic.x)
+                   + "," + String(mag.magnetic.y) + "," + String(mag.magnetic.z);
+
   //while (!Serial.available());
   //String read_in = Serial.readString();
   //if (read_in == "go") {
-    sensors_event_t accel;
-    sensors_event_t gyro;
-    sensors_event_t mag;
-    sensors_event_t temp;
-    
-    icm.getEvent(&accel, &gyro, &temp, &mag);
-    
-    value_Thumb = analogRead(flexPin_Thumb);
-    value_Index = analogRead(flexPin_Index);
-    value_Middle = analogRead(flexPin_Middle);
-    value_Ring = analogRead(flexPin_Ring);
-    value_Pinky = analogRead(flexPin_Pinky);
-  
-    float flexV_Thumb = value_Thumb * VCC / 1023.0;
-    float flexR_Thumb = R_DIV * (VCC / flexV_Thumb - 1.0);
-    float angle_Thumb = map(flexR_Thumb, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
-                     0, 90.0);
-    float flexV_Index = value_Index * VCC / 1023.0;
-    float flexR_Index = R_DIV * (VCC / flexV_Index - 1.0);
-    float angle_Index = map(flexR_Index, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
-                     0, 90.0);
-    float flexV_Middle = value_Middle * VCC / 1023.0;
-    float flexR_Middle = R_DIV * (VCC / flexV_Middle - 1.0);
-    float angle_Middle = map(flexR_Middle, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
-                     0, 90.0);
-    float flexV_Ring = value_Ring * VCC / 1023.0;
-    float flexR_Ring = R_DIV * (VCC / flexV_Index - 1.0);
-    float angle_Ring = map(flexR_Ring, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
-                     0, 90.0);
-    float flexV_Pinky = value_Pinky * VCC / 1023.0;
-    float flexR_Pinky = R_DIV * (VCC / flexV_Pinky - 1.0);
-    float angle_Pinky = map(flexR_Pinky, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
-                     0, 90.0);
-  
-    String sendstr = String(angle_Thumb) + "," + String(angle_Index) + "," + String(angle_Middle)
-                     + "," + String(angle_Ring) + "," + String(angle_Pinky) 
-                     + "," + String(accel.acceleration.x) + "," + String(accel.acceleration.y)
-                     + "," + String(accel.acceleration.z) + "," + String(gyro.gyro.x) + "," +
-                     String(gyro.gyro.y) + "," + String(gyro.gyro.z) + "," + String(mag.magnetic.x)
-                     + "," + String(mag.magnetic.y) + "," + String(mag.magnetic.z);
-    
     Serial.println(sendstr);
   //}
 

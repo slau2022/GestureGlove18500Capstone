@@ -98,3 +98,37 @@ Prediction rate: 18.982579632885937predictions/sec
 
 Prediction rate: 17.220500913363477predictions/sec
 
+Prediction rate: 5.736847927713208predictions/sec
+
+Prediction rate: 4.563492897157097predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 5.851794048262307predictions/sec
+
+Prediction rate: 16.971834072853795predictions/sec
+
+Prediction rate: 12.389213297207561predictions/sec
+
+Prediction rate: 10.14666279396512predictions/sec
+
+Prediction rate: 9.491329442607032predictions/sec
+
+Prediction rate: 9.484174007419428predictions/sec
+
+Prediction rate: 14.344129781606224predictions/sec
+
+Prediction rate: 11.539424247165147predictions/sec
+
+Prediction rate: 0.0predictions/sec
+
+Prediction rate: 17.29336477182592predictions/sec
+
+Prediction rate: 15.839101206319858predictions/sec
+
+Prediction rate: 17.461219064488464predictions/sec
+
+Prediction rate: 17.158064001827682predictions/sec
+
