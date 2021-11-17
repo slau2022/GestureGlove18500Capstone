@@ -45,62 +45,12 @@ window_size = 3
 successes = 0
 
 start = time.time()
-'''while True: 
-    if (keyboard.is_pressed("esc")):
-        break
-    try:
-        data = arduino.readline().decode('utf-8').strip()
-    except:
-        data = ""
-    if (going):
-        if (data == "end"):
-            going = False
-            if (len(data_point) == 14):
-                if (not mag):
-                    data_point = data_point[:-3]
-                data_point = np.array(data_point).reshape(1, -1)
-                data_point = scaler.transform(data_point)
-                #print(data_point)
-                probabilities = model.predict_proba(data_point)
-                pred = np.argmax(probabilities)
-                if (probabilities[0, pred] > 0.25 and pred != 27):
-                    print(labels[pred])
-                else:
-                    print("-")
-                successes += 1
-            else:
-                fails += 1
-                
-                
-            data_point = []
-        elif (data == "endbegin"):
-            if (len(data_point) == 14):
-                if (not mag):
-                    data_point = data_point[:-3]
-                data_point = np.array(data_point).reshape(1, -1)
-                data_point = scaler.transform(data_point)
-                #print(data_point)
-                probabilities = model.predict_proba(data_point)
-                pred = np.argmax(probabilities)
-                if (probabilities[0, pred] > 0.25 and pred != 27):
-                    print(labels[pred])
-                else:
-                    print("-")
-                successes += 1
-            else:
-                fails += 1
-            data_point = []
-        else:
-            try:
-                data_point.append(float(data))
-            except: 
-                pass
-    elif (data == "begin"):
-        going = True'''
 
 data_point = []
-arduino.write(bytes("go", "utf-8"))
+prev = ""
+prev_outputted = ""
 while (True):
+    arduino.write(bytes("go", "utf-8"))
     if (keyboard.is_pressed("esc")):
         break
     try:
@@ -124,18 +74,40 @@ while (True):
             if (probabilities_rf[0, pred_rf] > 0.25 and pred_rf != 27 and pred_rf != 26):
                 if (labels[pred_rf] in {"r", "u", "v", "w"}):
                     pred = int(model_ruvw.predict(scaler_ruvw.transform(data_point_or))[0])
-                    #playsound("audio_files/" + labels[pred_rf] + ".mp3")
-                    print(labels[pred-1].upper(), labels[pred_rf].upper())
+                    #playsound("audio_files/" + labels[pred-1] + ".mp3")
+                    if (prev == "" or prev[-1] != labels[pred-1]):
+                        prev = labels[pred-1]
+                    else:
+                        prev += labels[pred-1]
+                    #print(labels[pred-1].upper(), labels[pred_rf].upper())
                 elif (labels[pred_rf] in {"m", "n", "s", "t", "e"}):
                     pred = int(model_mnste.predict(scaler_mnste.transform(data_point_or))[0])
-                    print(labels[pred-1].upper(), labels[pred_rf].upper())
+                    #playsound("audio_files/" + labels[pred-1] + ".mp3")
+                    if (prev == "" or prev[-1] != labels[pred-1]):
+                        prev = labels[pred-1]
+                    else:
+                        prev += labels[pred-1]
+                    #print(labels[pred-1].upper(), labels[pred_rf].upper())
                 else:
-                    print(labels[pred_rf].upper())
+                    #playsound("audio_files/" + labels[pred_rf] + ".mp3")
+                    if (prev == "" or prev[-1] != labels[pred_rf]):
+                        prev = labels[pred_rf]
+                    else:
+                        prev += labels[pred_rf]
+                    #print(labels[pred_rf].upper())
             else:
                 print("-")
+                prev = ""
             data_point = []
             successes += 1
-            arduino.write(bytes("go", "utf-8"))
+            print(prev)
+            if (len(prev) == 10):
+                if (not (prev_outputted == prev[-1] and prev[-1] in {"s", "e", "f", "l", "m", "o"})):
+                    print("audio_files/" + prev[-1] + ".mp3")
+                    arduino.write(bytes("stop", "utf-8"))
+                    playsound("audio_files/" + prev[-1] + ".mp3")
+                prev = ""
+                prev_outputted = prev[-1]
     except:
         print("uh oh")
         data_point = []
