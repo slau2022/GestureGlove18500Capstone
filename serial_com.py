@@ -8,17 +8,6 @@ import time
 import os
 from playsound import playsound
 
-'''
-COMMONLY CONFUSED LETTERS:
-c + o
-d + t + x
-n + a
-r + u + v
-t + m + n
-u + w + k
-x (a big problem)
-z + l
-'''
 
 arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.1)
 
@@ -74,33 +63,26 @@ while (True):
             if (probabilities_rf[0, pred_rf] > 0.25 and pred_rf != 27 and pred_rf != 26):
                 if (labels[pred_rf] in {"r", "u", "v", "w"}):
                     pred = int(model_ruvw.predict(scaler_ruvw.transform(data_point_or))[0])
-                    #playsound("audio_files/" + labels[pred-1] + ".mp3")
                     if (prev == "" or prev[-1] != labels[pred-1]):
                         prev = labels[pred-1]
                     else:
                         prev += labels[pred-1]
-                    #print(labels[pred-1].upper(), labels[pred_rf].upper())
                 elif (labels[pred_rf] in {"m", "n", "s", "t", "e"}):
                     pred = int(model_mnste.predict(scaler_mnste.transform(data_point_or))[0])
-                    #playsound("audio_files/" + labels[pred-1] + ".mp3")
                     if (prev == "" or prev[-1] != labels[pred-1]):
                         prev = labels[pred-1]
                     else:
                         prev += labels[pred-1]
-                    #print(labels[pred-1].upper(), labels[pred_rf].upper())
                 else:
-                    #playsound("audio_files/" + labels[pred_rf] + ".mp3")
                     if (prev == "" or prev[-1] != labels[pred_rf]):
                         prev = labels[pred_rf]
                     else:
                         prev += labels[pred_rf]
-                    #print(labels[pred_rf].upper())
             else:
                 print("-")
                 prev = ""
             data_point = []
             successes += 1
-            print(prev)
             if (len(prev) == 10):
                 if (not (prev_outputted == prev[-1] and prev[-1] in {"s", "e", "f", "l", "m", "o"})):
                     print("audio_files/" + prev[-1] + ".mp3")
