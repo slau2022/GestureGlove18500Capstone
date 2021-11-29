@@ -132,9 +132,7 @@ void setup() {
 
 void loop() {
   delay(10);
-  while (!Serial.available());
-  String read_in = Serial.readString();
-    if (read_in == "go") {
+  if (Serial.available()) {
     sensors_event_t accel;
     sensors_event_t gyro;
     sensors_event_t mag;
@@ -179,7 +177,7 @@ void loop() {
   
     Serial.println(sendstr);
   } else {
-    Serial.println("");
+    Serial.println("a");
   }
 
  

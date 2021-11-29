@@ -179,47 +179,75 @@ def oct26_uw():
 def plot_point_clouds(letter1, letter2):
     fn1 = "../real_data_nov5_window3/" + letter1 + ".npy"
     fn2 = "../real_data_nov5_window3/" + letter2 + ".npy"
-    data1 = np.load(fn1)
-    data2 = np.load(fn2)
+    data1 = np.load(fn1)[:, :14]
+    data2 = np.load(fn2)[:, :14]
+
+    fn1 = "../rachel_roommates/" + letter1 + ".npy"
+    fn2 = "../rachel_roommates/" + letter2 + ".npy"
+    data1 = np.vstack((data1, np.load(fn1)[:, :14]))
+    data2 = np.vstack((data2, np.load(fn2)[:, :14]))
 
     fig = plt.figure()
     ax = fig.add_subplot(projection="3d")
     ax.scatter(data1[:, 0], data1[:, 1], data1[:, 2], c="b", label=letter1)
     ax.scatter(data2[:, 0], data2[:, 1], data2[:, 2], c="r", label=letter2)
-    ax.set_title(letter1 + " vs. " + letter2 + " (Thumb, Pointer, Middle)")
+    ax.set_title(letter1.upper() + " vs. " + letter2.upper() + " (Thumb, Pointer, Middle)")
     plt.legend(loc='upper right')
-    plt.show()
+    #plt.show()
+    plt.savefig("123_point_cloud.png")
 
     fig = plt.figure()
     ax = fig.add_subplot()
     ax.scatter(data1[:, 3], data1[:, 4], c="b", label=letter1)
     ax.scatter(data2[:, 3], data2[:, 4], c="r", label=letter2)
-    ax.set_title(letter1 + " vs. " + letter2 + " (Ring, Pinky)")
+    ax.set_title(letter1.upper() + " vs. " + letter2.upper() + " (Ring, Pinky)")
     plt.legend(loc='upper right')
-    plt.show()
+    #plt.show()
+    plt.savefig("45_point_cloud.png")
 
     fig = plt.figure()
     ax = fig.add_subplot(projection="3d")
     ax.scatter(data1[:, 5], data1[:, 6], data1[:, 7], c="b", label=letter1)
     ax.scatter(data2[:, 5], data2[:, 6], data2[:, 7], c="r", label=letter2)
-    ax.set_title(letter1 + " vs. " + letter2 + " (Accelerometer X, Y, Z)")
+    ax.set_title(letter1.upper() + " vs. " + letter2.upper() + " (Accelerometer X, Y, Z)")
     plt.legend(loc='upper right')
-    plt.show()
+    #plt.show()
+    plt.savefig("acc_point_cloud.png")
 
     fig = plt.figure()
     ax = fig.add_subplot(projection="3d")
     ax.scatter(data1[:, 8], data1[:, 9], data1[:, 10], c="b", label=letter1)
     ax.scatter(data2[:, 8], data2[:, 9], data2[:, 10], c="r", label=letter2)
-    ax.set_title(letter1 + " vs. " + letter2 + " (Gyroscope X, Y, Z)")
+    ax.set_title(letter1.upper() + " vs. " + letter2.upper() + " (Gyroscope X, Y, Z)")
     plt.legend(loc='upper right')
-    plt.show()
+    #plt.show()
+    plt.savefig("gyro_point_cloud.png")
 
     fig = plt.figure()
     ax = fig.add_subplot(projection="3d")
     ax.scatter(data1[:, 11], data1[:, 12], data1[:, 13], c="b", label=letter1)
     ax.scatter(data2[:, 11], data2[:, 12], data2[:, 13], c="r", label=letter2)
-    ax.set_title(letter1 + " vs. " + letter2 + " (Magnetometer X, Y, Z)")
+    ax.set_title(letter1.upper() + " vs. " + letter2.upper() + " (Magnetometer X, Y, Z)")
     plt.legend(loc='upper right')
-    plt.show()
+    plt.savefig("mag_point_cloud.png")
 
-plot_point_clouds("u", "v")
+def generate_sys_speed_vs_accuracy():
+    required_consecutive = [11, 10, 9, 8, 7, 6]
+    success_rate = [15/25, 14/23, 12/20, 14/20, 16/28, 9/28]
+    plt.figure()
+    plt.plot(required_consecutive, success_rate)
+    plt.title("Required Consecutive Predictions vs. Accuracy")
+    plt.xlabel("Required Consecutive Predictions")
+    plt.ylabel("Accuracy")
+    plt.savefig("sys_speed_vs_acc.png")
+
+def generate_user_speed_vs_accuracy():
+    signing_rate = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]
+    accuracy = [17/49, 16/34, 14/20, 12/20, 12/17, 15/22, 2/20]
+    plt.figure()
+    plt.plot(signing_rate, accuracy)
+    plt.title("User Signing Rate vs. Accuracy")
+    plt.xlabel("User Signing Rate")
+    plt.ylabel("Accuracy")
+    plt.savefig("user_speed_vs_acc.png")
+
