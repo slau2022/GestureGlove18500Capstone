@@ -12,11 +12,15 @@ uint16_t measurement_delay_us = 65535; // Delay between measurements for testing
 #define ICM_MISO 12
 #define ICM_MOSI 11
 
-const int flexPin_Thumb = A0; //pin A0 to read analog input
-const int flexPin_Index = A1;
+const int flexPin_Thumb = A6; //pin A0 to read analog input
+const int flexPin_Index = A3;
 const int flexPin_Middle = A2;
-const int flexPin_Ring = A3;
-const int flexPin_Pinky = A6;
+const int flexPin_Ring = A1;
+const int flexPin_Pinky = A0;
+
+const int touch_IndexMiddle = 2;
+const int touch_MiddleRing = 4;
+const int touch_RingPinky = 5;
 
 int value_Thumb;
 int value_Index;
@@ -34,6 +38,10 @@ const float BEND_RESISTANCE = 90000.0; // resistance at 90 deg
 
 
 void setup() {
+  pinMode(touch_IndexMiddle, INPUT);
+  pinMode(touch_MiddleRing, INPUT);
+  pinMode(touch_RingPinky, INPUT);
+  
   Serial.begin(115200);
   Serial.flush();
   while (!Serial)
@@ -132,9 +140,8 @@ void setup() {
 
 void loop() {
   delay(10);
-  while (!Serial.available());
-  String read_in = Serial.readString();
-    if (read_in == "go") {
+
+  if (Serial.available()) {
     sensors_event_t accel;
     sensors_event_t gyro;
     sensors_event_t mag;
@@ -147,40 +154,23 @@ void loop() {
     value_Middle = analogRead(flexPin_Middle);
     value_Ring = analogRead(flexPin_Ring);
     value_Pinky = analogRead(flexPin_Pinky);
+ 
+
+    int IndexMiddle = digitalRead(touch_IndexMiddle);
+    int MiddleRing = digitalRead(touch_MiddleRing);
+    int RingPinky = digitalRead(touch_RingPinky);
   
-    float flexV_Thumb = value_Thumb * VCC / 1023.0;
-    float flexR_Thumb = R_DIV * (VCC / flexV_Thumb - 1.0);
-    float angle_Thumb = map(flexR_Thumb, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
-                     0, 90.0);
-    float flexV_Index = value_Index * VCC / 1023.0;
-    float flexR_Index = R_DIV * (VCC / flexV_Index - 1.0);
-    float angle_Index = map(flexR_Index, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
-                     0, 90.0);
-    float flexV_Middle = value_Middle * VCC / 1023.0;
-    float flexR_Middle = R_DIV * (VCC / flexV_Middle - 1.0);
-    float angle_Middle = map(flexR_Middle, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
-                     0, 90.0);
-    float flexV_Ring = value_Ring * VCC / 1023.0;
-    float flexR_Ring = R_DIV * (VCC / flexV_Index - 1.0);
-    float angle_Ring = map(flexR_Ring, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
-                     0, 90.0);
-    float flexV_Pinky = value_Pinky * VCC / 1023.0;
-    float flexR_Pinky = R_DIV * (VCC / flexV_Pinky - 1.0);
-    float angle_Pinky = map(flexR_Pinky, STRAIGHT_RESISTANCE, BEND_RESISTANCE,
-                     0, 90.0);
-  
-    String sendstr = String(angle_Thumb) + "," + String(angle_Index) + "," + String(angle_Middle)
-                     + "," + String(angle_Ring) + "," + String(angle_Pinky) 
+    String sendstr = String(value_Thumb) + "," + String(value_Index) + "," + String(value_Middle)
+                     + "," + String(value_Ring) + "," + String(value_Pinky) 
                      + "," + String(accel.acceleration.x) + "," + String(accel.acceleration.y)
                      + "," + String(accel.acceleration.z) + "," + String(gyro.gyro.x) + "," +
                      String(gyro.gyro.y) + "," + String(gyro.gyro.z) + "," + String(mag.magnetic.x)
-                   + "," + String(mag.magnetic.y) + "," + String(mag.magnetic.z);
+                   + "," + String(mag.magnetic.y) + "," + String(mag.magnetic.z) + "," + IndexMiddle
+                   + "," + MiddleRing + "," + RingPinky;
 
-  
     Serial.println(sendstr);
-  } else {
-    Serial.println("");
   }
+
 
  
   /*

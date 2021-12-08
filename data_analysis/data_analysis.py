@@ -1,86 +1,62 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+ 
+def first():
+    filename_fake = "../fake_data/simulated_train_data.csv"
+    filename_real = "../real_data/l.npy"
 
-'''filename_fake = "../fake_data/simulated_train_data.csv"
-filename_real = "../real_data/l.npy"
+    fake_data_full = np.genfromtxt(filename_fake, delimiter=" ", skip_header=1, dtype=float)
+    fake_data = fake_data_full[1100:1200, :]
+    real_data = np.load(filename_real, allow_pickle=True)
 
-fake_data_full = np.genfromtxt(filename_fake, delimiter=" ", skip_header=1, dtype=float)
-fake_data = fake_data_full[1100:1200, :]
-real_data = np.load(filename_real, allow_pickle=True)
+    print("fake data shape:", fake_data.shape)
+    print("real data shape:", real_data.shape)
 
-print("fake data shape:", fake_data.shape)
-print("real data shape:", real_data.shape)
+    # 0, 1, 4
+    plt.xlabel("Thumb")
+    plt.ylabel("Pointer")
+    plt.title("Real Data: Thumb vs. Pointer vs. Pinky")
+    plt.scatter(real_data[:, 0], real_data[:, 1], s=real_data[:, 4]*5)
+    plt.savefig("real_014.png")
+    plt.show()
 
-# 0, 1, 4
-plt.xlabel("Thumb")
-plt.ylabel("Pointer")
-plt.title("Real Data: Thumb vs. Pointer vs. Pinky")
-plt.scatter(real_data[:, 0], real_data[:, 1], s=real_data[:, 4]*5)
-plt.savefig("real_014.png")
-plt.show()
+    plt.xlabel("Thumb")
+    plt.ylabel("Pointer")
+    plt.title("Fake Data: Thumb vs. Pointer vs. Pinky")
+    plt.scatter(fake_data[:, 0], fake_data[:, 1], s=fake_data[:, 4]*5)
+    plt.savefig("fake_014.png")
+    plt.show()
 
-plt.xlabel("Thumb")
-plt.ylabel("Pointer")
-plt.title("Fake Data: Thumb vs. Pointer vs. Pinky")
-plt.scatter(fake_data[:, 0], fake_data[:, 1], s=fake_data[:, 4]*5)
-plt.savefig("fake_014.png")
-plt.show()
+    #2, 8, 10
+    plt.xlabel("Middle")
+    plt.ylabel("AccelerometerZ")
+    plt.title("Real Data: Middle vs. AccelerometerZ vs. GyroscopeY")
+    plt.scatter(real_data[:, 2], real_data[:, 8], s=real_data[:, 10]*5)
+    plt.savefig("real_2810.png")
+    plt.show()
 
-#2, 8, 10
-plt.xlabel("Middle")
-plt.ylabel("AccelerometerZ")
-plt.title("Real Data: Middle vs. AccelerometerZ vs. GyroscopeY")
-plt.scatter(real_data[:, 2], real_data[:, 8], s=real_data[:, 10]*5)
-plt.savefig("real_2810.png")
-plt.show()
+    plt.xlabel("Middle")
+    plt.ylabel("AccelerometerZ")
+    plt.title("Fake Data: Middle vs. AccelerometerZ vs. GyroscopeY")
+    plt.scatter(fake_data[:, 2], fake_data[:, 8], s=fake_data[:, 10]*5)
+    plt.savefig("fake_2810.png")
+    plt.show()
 
-plt.xlabel("Middle")
-plt.ylabel("AccelerometerZ")
-plt.title("Fake Data: Middle vs. AccelerometerZ vs. GyroscopeY")
-plt.scatter(fake_data[:, 2], fake_data[:, 8], s=fake_data[:, 10]*5)
-plt.savefig("fake_2810.png")
-plt.show()
+    # 11, 12, 13
+    plt.xlabel("GyroscopeX")
+    plt.ylabel("GyroscopeY")
+    plt.title("Real Data: Magnetometer")
+    plt.scatter(real_data[:, 11], real_data[:, 12], s=real_data[:, 13]*10)
+    plt.savefig("real_111213.png")
+    plt.show()
 
-# 11, 12, 13
-plt.xlabel("GyroscopeX")
-plt.ylabel("GyroscopeY")
-plt.title("Real Data: Magnetometer")
-plt.scatter(real_data[:, 11], real_data[:, 12], s=real_data[:, 13]*10)
-plt.savefig("real_111213.png")
-plt.show()
-
-plt.xlabel("GyroscopeX")
-plt.ylabel("GyroscopeY")
-plt.title("Fake Data: Magnetometer")
-plt.scatter(fake_data[:, 11], fake_data[:, 12], s=fake_data[:, 13]*10)
-plt.savefig("fake_111213.png")
-plt.show()'''
-#42:
-#0,1,2,3,4
-#14,15,16,17,18
-#28,29,30,31,32
-def remove_outliers(data):
-    flex_index = [0,1,2,3,4,14,15,16,17,18,28,29,30,31,32]
-    if(len(data.shape)==1): return data
-    r,c = data.shape
-    #data[0] = row; data[:,0] = column 
-    # print(type(data))
-    to_del = list()
-    for i in range(0,r):
-        row = data[i] 
-        for j,val in enumerate(row):
-            
-            if(val<=-40 and j in flex_index): 
-                to_del.append(i)
-                break 
-
-            if(val>=500): 
-                to_del.append(i)
-                break  
-    #(3788, 43) (15934, 43) (4746, 43)
-    #(3779, 43) (15934, 43) (4736, 43)
-    new_data = np.delete(data, to_del, axis=0) #delete row
+    plt.xlabel("GyroscopeX")
+    plt.ylabel("GyroscopeY")
+    plt.title("Fake Data: Magnetometer")
+    plt.scatter(fake_data[:, 11], fake_data[:, 12], s=fake_data[:, 13]*10)
+    plt.savefig("fake_111213.png")
+    plt.show()
  
 
     return new_data
@@ -201,10 +177,83 @@ def oct26_uw():
     plt.legend(loc='upper right') 
     plt.savefig(dataset + "_gyro.png")
 
-     
 
-   
+def plot_point_clouds(letter1, letter2):
+    fn1 = "../real_data_nov5_window3/" + letter1 + ".npy"
+    fn2 = "../real_data_nov5_window3/" + letter2 + ".npy"
+    data1 = np.load(fn1)[:, :14]
+    data2 = np.load(fn2)[:, :14]
+
+    fn1 = "../rachel_roommates/" + letter1 + ".npy"
+    fn2 = "../rachel_roommates/" + letter2 + ".npy"
+    data1 = np.vstack((data1, np.load(fn1)[:, :14]))
+    data2 = np.vstack((data2, np.load(fn2)[:, :14]))
+
+    fig = plt.figure()
+    ax = fig.add_subplot(projection="3d")
+    ax.scatter(data1[:, 0], data1[:, 1], data1[:, 2], c="b", label=letter1)
+    ax.scatter(data2[:, 0], data2[:, 1], data2[:, 2], c="r", label=letter2)
+    ax.set_title(letter1.upper() + " vs. " + letter2.upper() + " (Thumb, Pointer, Middle)")
+    plt.legend(loc='upper right')
+    #plt.show()
+    plt.savefig("123_point_cloud.png")
+
+    fig = plt.figure()
+    ax = fig.add_subplot()
+    ax.scatter(data1[:, 3], data1[:, 4], c="b", label=letter1)
+    ax.scatter(data2[:, 3], data2[:, 4], c="r", label=letter2)
+    ax.set_title(letter1.upper() + " vs. " + letter2.upper() + " (Ring, Pinky)")
+    plt.legend(loc='upper right')
+    #plt.show()
+    plt.savefig("45_point_cloud.png")
+
  
+    fig = plt.figure()
+    ax = fig.add_subplot(projection="3d")
+    ax.scatter(data1[:, 5], data1[:, 6], data1[:, 7], c="b", label=letter1)
+    ax.scatter(data2[:, 5], data2[:, 6], data2[:, 7], c="r", label=letter2)
+    ax.set_title(letter1.upper() + " vs. " + letter2.upper() + " (Accelerometer X, Y, Z)")
+    plt.legend(loc='upper right')
+    #plt.show()
+    plt.savefig("acc_point_cloud.png")
+
+    fig = plt.figure()
+    ax = fig.add_subplot(projection="3d")
+    ax.scatter(data1[:, 8], data1[:, 9], data1[:, 10], c="b", label=letter1)
+    ax.scatter(data2[:, 8], data2[:, 9], data2[:, 10], c="r", label=letter2)
+    ax.set_title(letter1.upper() + " vs. " + letter2.upper() + " (Gyroscope X, Y, Z)")
+    plt.legend(loc='upper right')
+    #plt.show()
+    plt.savefig("gyro_point_cloud.png")
+
+    fig = plt.figure()
+    ax = fig.add_subplot(projection="3d")
+    ax.scatter(data1[:, 11], data1[:, 12], data1[:, 13], c="b", label=letter1)
+    ax.scatter(data2[:, 11], data2[:, 12], data2[:, 13], c="r", label=letter2)
+    ax.set_title(letter1.upper() + " vs. " + letter2.upper() + " (Magnetometer X, Y, Z)")
+    plt.legend(loc='upper right')
+    plt.savefig("mag_point_cloud.png")
+
+def generate_sys_speed_vs_accuracy():
+    required_consecutive = [11, 10, 9, 8, 7, 6]
+    success_rate = [15/25, 14/23, 12/20, 14/20, 16/28, 9/28]
+    plt.figure()
+    plt.plot(required_consecutive, success_rate)
+    plt.title("Required Consecutive Predictions vs. Accuracy")
+    plt.xlabel("Required Consecutive Predictions")
+    plt.ylabel("Accuracy")
+    plt.savefig("sys_speed_vs_acc.png")
+
+def generate_user_speed_vs_accuracy():
+    signing_rate = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]
+    accuracy = [17/49, 16/34, 14/20, 12/20, 12/17, 15/22, 2/20]
+    plt.figure()
+    plt.plot(signing_rate, accuracy)
+    plt.title("User Signing Rate vs. Accuracy")
+    plt.xlabel("User Signing Rate")
+    plt.ylabel("Accuracy")
+    plt.savefig("user_speed_vs_acc.png")
+
 
 def window3_data():
     paths = ['real_data_nov5_window3/','rachel_roommates/','data_sz_friends/']
@@ -231,7 +280,4 @@ def window3_data():
         plt.title(fingers[i])
         plt.xlabel("bend angle")
         plt.show() 
-
-    #idea, ignore thumb
-    
-window3_data()
+ 

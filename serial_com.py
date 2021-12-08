@@ -8,17 +8,6 @@ import time
 import os
 from playsound import playsound
 
-'''
-COMMONLY CONFUSED LETTERS:
-c + o
-d + t + x
-n + a
-r + u + v
-t + m + n
-u + w + k
-x (a big problem)
-z + l
-'''
 
 arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.1)
 
@@ -43,12 +32,14 @@ vector_len = 14
 window_size = 3
 
 successes = 0
+num_pred = 0
 
 start = time.time()
 
 data_point = []
 prev = ""
 prev_outputted = ""
+time.sleep(2)
 while (True):
     arduino.write(bytes("go", "utf-8"))
     if (keyboard.is_pressed("esc")):
@@ -74,55 +65,55 @@ while (True):
             if (probabilities_rf[0, pred_rf] > 0.25 and pred_rf != 27 and pred_rf != 26):
                 if (labels[pred_rf] in {"r", "u", "v", "w"}):
                     pred = int(model_ruvw.predict(scaler_ruvw.transform(data_point_or))[0])
-                    #playsound("audio_files/" + labels[pred-1] + ".mp3")
+                    #print(letters[pred-1])
                     if (prev == "" or prev[-1] != labels[pred-1]):
                         prev = labels[pred-1]
                     else:
                         prev += labels[pred-1]
-                    #print(labels[pred-1].upper(), labels[pred_rf].upper())
                 elif (labels[pred_rf] in {"m", "n", "s", "t", "e"}):
                     pred = int(model_mnste.predict(scaler_mnste.transform(data_point_or))[0])
-                    #playsound("audio_files/" + labels[pred-1] + ".mp3")
+                    #print(letters[pred-1])
                     if (prev == "" or prev[-1] != labels[pred-1]):
                         prev = labels[pred-1]
                     else:
                         prev += labels[pred-1]
-                    #print(labels[pred-1].upper(), labels[pred_rf].upper())
                 else:
-                    #playsound("audio_files/" + labels[pred_rf] + ".mp3")
+                    #print(letters[pred_rf])
                     if (prev == "" or prev[-1] != labels[pred_rf]):
                         prev = labels[pred_rf]
                     else:
                         prev += labels[pred_rf]
-                    #print(labels[pred_rf].upper())
             else:
                 print("-")
                 prev = ""
             data_point = []
-            successes += 1
-            print(prev)
-            if (len(prev) == 10):
-                if (not (prev_outputted == prev[-1] and prev[-1] in {"s", "e", "f", "l", "m", "o"})):
-                    print("audio_files/" + prev[-1] + ".mp3")
-                    arduino.write(bytes("stop", "utf-8"))
-                    playsound("audio_files/" + prev[-1] + ".mp3")
+            if (len(prev) == 8):
+                print(prev[-1])
+                #playsound("audio_files/" + prev[-1] + ".mp3")
+                time.sleep(0.8)
+                successes += 1
                 prev = ""
                 prev_outputted = prev[-1]
+            num_pred += 1
     except:
-        print("uh oh")
         data_point = []
+    arduino.write(bytes("go", "utf-8"))
 
 end = time.time()
 
 pred_rate = successes/(end - start)
+pred_time = (end - start)/num_pred
 print("Prediction rate:", pred_rate)
+print("Time per prediction:", pred_time)
 
 data_file = "serial_com_data.txt"
 if (not os.path.exists(data_file)):
     f = open(data_file, "w")
-    f.write("Prediction rate: " + str(pred_rate) + "predictions/sec\n\n")
+    f.write("Prediction rate: " + str(pred_rate) + "predictions/sec\n \
+             Time per prediction: " + str(pred_time) + "sec/prediction\n\n")
     f.close()
 else:
     f = open(data_file, "a")
-    f.write("Prediction rate: " + str(pred_rate) + "predictions/sec\n\n")
+    f.write("Prediction rate: " + str(pred_rate) + "predictions/sec\n \
+            Time per prediction: " + str(pred_time) + "sec/prediction\n\n")
     f.close()
