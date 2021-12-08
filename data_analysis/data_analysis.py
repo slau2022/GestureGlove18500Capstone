@@ -56,7 +56,34 @@ plt.title("Fake Data: Magnetometer")
 plt.scatter(fake_data[:, 11], fake_data[:, 12], s=fake_data[:, 13]*10)
 plt.savefig("fake_111213.png")
 plt.show()'''
+#42:
+#0,1,2,3,4
+#14,15,16,17,18
+#28,29,30,31,32
+def remove_outliers(data):
+    flex_index = [0,1,2,3,4,14,15,16,17,18,28,29,30,31,32]
+    if(len(data.shape)==1): return data
+    r,c = data.shape
+    #data[0] = row; data[:,0] = column 
+    # print(type(data))
+    to_del = list()
+    for i in range(0,r):
+        row = data[i] 
+        for j,val in enumerate(row):
+            
+            if(val<=-40 and j in flex_index): 
+                to_del.append(i)
+                break 
 
+            if(val>=500): 
+                to_del.append(i)
+                break  
+    #(3788, 43) (15934, 43) (4746, 43)
+    #(3779, 43) (15934, 43) (4736, 43)
+    new_data = np.delete(data, to_del, axis=0) #delete row
+ 
+
+    return new_data
 def oct26_pj():
     p = np.load("../real_data_oct26/p.npy")
     j = np.load("../real_data_oct26/j.npy")
@@ -179,5 +206,32 @@ def oct26_uw():
    
  
 
+def window3_data():
+    paths = ['real_data_nov5_window3/','rachel_roommates/','data_sz_friends/']
+    # paths = ['rachel_roommates/']
+    letters = ['r','u','v','w']
+    data = list()
+    for l in letters:
+        temp = np.empty( (0,42 ))
+        for p in paths:
+            l_data = np.load("../"+p+"/"+l+".npy")
 
-oct26_uw()
+            l_data = remove_outliers(l_data)
+            temp = np.concatenate( (temp, l_data), axis=0)
+        # data[l] = temp 
+        data.append(temp)
+    print(temp.shape)
+    fingers = ['thumb','index','middle','ring','pinky']
+    for i in range(0,5):
+
+        plt.hist( [ data[0][:,i], data[1][:,i],data[2][:,i],data[3][:,i]], 
+            label=letters, bins=20)
+
+        plt.legend(loc='upper right')
+        plt.title(fingers[i])
+        plt.xlabel("bend angle")
+        plt.show() 
+
+    #idea, ignore thumb
+    
+window3_data()
