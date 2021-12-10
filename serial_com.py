@@ -7,20 +7,18 @@ from sklearn.preprocessing import StandardScaler
 import time
 import os
 from playsound import playsound
+import warnings
 
 
 arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.1)
 
-model_nn = pickle.load(open("models/nn_model_nov5_all_data.p", "rb"))
-model_rf = pickle.load(open("models/rf_model_nov5_all_data.p", "rb"))
-model_ruvw = pickle.load(open("models/nn_model_ruvw.p", "rb"))
-model_mnste = pickle.load(open("models/nn_model_mnste.p", "rb"))
-scaler = pickle.load(open("models/scaler_nov5_all_data.p", "rb"))
-scaler_ruvw = pickle.load(open("models/scaler_ruvw.p", "rb"))
-scaler_mnste = pickle.load(open("models/scaler_mnste.p", "rb"))
+model_rf = pickle.load(open("models/rf_model_dec7_5050.p", "rb"))
+scaler = pickle.load(open("models/ct_dec7_5050.p", "rb"))
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 labels = letters + ['space','transition']
+
+warnings.filterwarnings("ignore")
 
 ruvw = ["r", "u", "v", "w"]
 mnste = ["m", "n", "s", "t", "e"]
@@ -28,7 +26,7 @@ mnste = ["m", "n", "s", "t", "e"]
 going = False
 data_point = []
 
-vector_len = 14
+vector_len = 17
 window_size = 3
 
 successes = 0
@@ -63,37 +61,23 @@ while (True):
             probabilities_rf = model_rf.predict_proba(data_point)
             pred_rf = np.argmax(probabilities_rf)
             if (probabilities_rf[0, pred_rf] > 0.25 and pred_rf != 27 and pred_rf != 26):
-                if (labels[pred_rf] in {"r", "u", "v", "w"}):
-                    pred = int(model_ruvw.predict(scaler_ruvw.transform(data_point_or))[0])
-                    #print(letters[pred-1])
-                    if (prev == "" or prev[-1] != labels[pred-1]):
-                        prev = labels[pred-1]
-                    else:
-                        prev += labels[pred-1]
-                elif (labels[pred_rf] in {"m", "n", "s", "t", "e"}):
-                    pred = int(model_mnste.predict(scaler_mnste.transform(data_point_or))[0])
-                    #print(letters[pred-1])
-                    if (prev == "" or prev[-1] != labels[pred-1]):
-                        prev = labels[pred-1]
-                    else:
-                        prev += labels[pred-1]
+                if (prev == "" or prev[-1] != labels[pred_rf]):
+                    prev = labels[pred_rf]
                 else:
-                    #print(letters[pred_rf])
-                    if (prev == "" or prev[-1] != labels[pred_rf]):
-                        prev = labels[pred_rf]
-                    else:
-                        prev += labels[pred_rf]
+                    prev += labels[pred_rf]
             else:
                 print("-")
                 prev = ""
             data_point = []
             if (len(prev) == 8):
                 print(prev[-1])
-                #playsound("audio_files/" + prev[-1] + ".mp3")
-                time.sleep(0.8)
+                if (prev_outputted != prev[-1]): 
+                    playsound("audio_files/" + prev[-1] + ".mp3")
+                    prev_outputted = prev[-1]
+                else:
+                    prev_outputted = ""
                 successes += 1
                 prev = ""
-                prev_outputted = prev[-1]
             num_pred += 1
     except:
         data_point = []
