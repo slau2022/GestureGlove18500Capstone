@@ -391,3 +391,6 @@ Prediction rate: 0.5931039873778972predictions/sec
 Prediction rate: 0.1631408709497528predictions/sec
              Time per prediction: 0.05348753773105082sec/prediction
 
+Prediction rate: 0.7442627130556284predictions/sec
+             Time per prediction: 0.05298008008865528sec/prediction
+

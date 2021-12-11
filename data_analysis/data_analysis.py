@@ -281,3 +281,26 @@ def window3_data():
         plt.xlabel("bend angle")
         plt.show() 
  
+
+def see_data_amounts():
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    labels = letters + ['space','transition']
+    total = {}
+    for path in ["../dec7_rachel/", "../dec7_sophia/", "../dec7_stephanie/"]:
+        amounts = []
+        for lab in labels:
+            amt = len(np.load(path + lab + ".npy"))
+            amounts.append(amt)
+            if (lab in total):
+                total[lab] += amt
+            else:
+                total[lab] = amt
+        plt.bar(labels, amounts)
+        plt.show()
+    amounts = []
+    for lab in labels:
+        amounts.append(total[lab])
+    plt.bar(labels, amounts)
+    plt.show()
+
+see_data_amounts()
