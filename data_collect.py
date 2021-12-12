@@ -7,14 +7,14 @@ import os
 
 arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.1)
 
-directory = "dec7_stephanie/"
+directory = "dec11_rachel/"
 if (not os.path.isdir(directory)):
     os.mkdir(directory)
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 labels = letters + ['space','transition']
-gesture_name = "a"
-gesture_ind = 0
+gesture_name = "l"
+gesture_ind = 11
 vector_len = 17
 window_size = 3
 
@@ -45,6 +45,8 @@ while (True):
         data = data.strip().split(",")
         if (len(data) == vector_len):
             for i in range(vector_len):
+                if (i < 5 and float(data[i]) == 0.0):
+                    print('WARNING: Sensor', i, "is loose")
                 data[i] = float(data[i])
             data_point.extend(data)
         if (len(data_point) == vector_len*window_size):

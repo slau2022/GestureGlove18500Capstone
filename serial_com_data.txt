@@ -394,3 +394,51 @@ Prediction rate: 0.1631408709497528predictions/sec
 Prediction rate: 0.7442627130556284predictions/sec
              Time per prediction: 0.05298008008865528sec/prediction
 
+Prediction rate: 0.1500312137605811predictions/sec
+             Time per prediction: 0.05344976668419567sec/prediction
+
+Prediction rate: 0.4550463592307028predictions/sec
+             Time per prediction: 0.053555341169701835sec/prediction
+
+Prediction rate: 0.0predictions/sec
+             Time per prediction: 0.05672931097627096sec/prediction
+
+Prediction rate: 0.1844222426827842predictions/sec
+             Time per prediction: 0.057684462121192444sec/prediction
+
+Prediction rate: 0.0predictions/sec
+             Time per prediction: 0.09361671924591064sec/prediction
+
+Prediction rate: 0.0predictions/sec
+             Time per prediction: 0.05975900377546038sec/prediction
+
+Prediction rate: 1.1570172849915654predictions/sec
+             Time per prediction: 0.05434579975567722sec/prediction
+
+Prediction rate: 1.2933920744014527predictions/sec
+             Time per prediction: 0.05657273858058744sec/prediction
+
+Prediction rate: 0.9894782205174811predictions/sec
+             Time per prediction: 0.05417940558395062sec/prediction
+
+Prediction rate: 0.8444817901877427predictions/sec
+             Time per prediction: 0.054944938468933106sec/prediction
+
+Prediction rate: 1.3766811143257278predictions/sec
+             Time per prediction: 0.054163940517888594sec/prediction
+
+Prediction rate: 1.0465416538426366predictions/sec
+             Time per prediction: 0.06622472257897405sec/prediction
+
+Prediction rate: 1.2706498313836059predictions/sec
+             Time per prediction: 0.05492306703392272sec/prediction
+
+Prediction rate: 0.134077755114149predictions/sec
+             Time per prediction: 0.0454777973454173sec/prediction
+
+Prediction rate: 0.36317774989505497predictions/sec
+             Time per prediction: 0.04887821265226285sec/prediction
+
+Prediction rate: 1.1099212063339252predictions/sec
+             Time per prediction: 0.08409005324045817sec/prediction
+

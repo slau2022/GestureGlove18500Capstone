@@ -12,7 +12,7 @@ import warnings
 
 arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.1)
 
-model_rf = pickle.load(open("models/rf_model_dec7_5050.p", "rb"))
+model_rf = pickle.load(open("models/rf_model_tune3.p", "rb"))
 scaler = pickle.load(open("models/ct_dec7_5050.p", "rb"))
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
@@ -50,7 +50,9 @@ while (True):
         data = data.strip().split(",")
         if (len(data) == vector_len):
             for i in range(vector_len):
-                    data[i] = float(data[i])
+                if (i < 5 and float(data[i]) == 0.0):
+                    print('WARNING: Sensor', i, "is loose")
+                data[i] = float(data[i])
             data_point.extend(data)
         else: 
             arduino.write(bytes("go", "utf-8"))
@@ -69,7 +71,7 @@ while (True):
                 print("-")
                 prev = ""
             data_point = []
-            if (len(prev) == 8):
+            if (len(prev) == 10):
                 print(prev[-1])
                 if (prev_outputted != prev[-1]): 
                     playsound("audio_files/" + prev[-1] + ".mp3")
