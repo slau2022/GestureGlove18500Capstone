@@ -37,6 +37,7 @@ start = time.time()
 data_point = []
 prev = ""
 prev_outputted = ""
+broken = True
 time.sleep(2)
 while (True):
     arduino.write(bytes("go", "utf-8"))
@@ -50,14 +51,18 @@ while (True):
         data = data.strip().split(",")
         if (len(data) == vector_len):
             for i in range(vector_len):
-                if (i < 5 and float(data[i]) == 0.0):
-                    print('WARNING: Sensor', i, "is loose")
+                if ((not broken) and i < 5 and float(data[i]) == 0.0):
+                    print('WARNING: Sensor', i, "is loose", end="... ")
+                    broken = True
                 data[i] = float(data[i])
+                if (broken and (0.0 not in data[:5])):
+                    print("fixed!")
+                    broken = False
             data_point.extend(data)
         else: 
             arduino.write(bytes("go", "utf-8"))
             continue
-        if (len(data_point) == vector_len*window_size):
+        if (len(data_point) == vector_len*window_size and (not broken)):
             data_point_or = np.array(data_point).reshape(1, -1)
             data_point = scaler.transform(data_point_or)
             probabilities_rf = model_rf.predict_proba(data_point)
