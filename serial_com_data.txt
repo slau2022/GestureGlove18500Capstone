@@ -442,3 +442,24 @@ Prediction rate: 0.36317774989505497predictions/sec
 Prediction rate: 1.1099212063339252predictions/sec
              Time per prediction: 0.08409005324045817sec/prediction
 
+Prediction rate: 0.09640327721183775predictions/sec
+             Time per prediction: 0.8189282636893424sec/prediction
+
+Prediction rate: 0.0predictions/sec
+             Time per prediction: 0.06057641317518495sec/prediction
+
+Prediction rate: 0.31967958547407266predictions/sec
+             Time per prediction: 0.05661777709224465sec/prediction
+
+Prediction rate: 0.8618922025513078predictions/sec
+             Time per prediction: 0.054041894350971044sec/prediction
+
+Prediction rate: 0.9186842210620164predictions/sec
+             Time per prediction: 0.054298799021260724sec/prediction
+
+Prediction rate: 1.0977418722563408predictions/sec
+             Time per prediction: 0.054135773721134726sec/prediction
+
+Prediction rate: 0.45332048360324156predictions/sec
+             Time per prediction: 0.05339136049010797sec/prediction
+

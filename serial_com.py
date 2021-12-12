@@ -12,7 +12,7 @@ import warnings
 
 arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.1)
 
-model_rf = pickle.load(open("models/rf_model_tune3.p", "rb"))
+model_rf = pickle.load(open("models/rf_model_dec11_2.p", "rb"))
 scaler = pickle.load(open("models/ct_dec7_5050.p", "rb"))
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
@@ -37,7 +37,7 @@ start = time.time()
 data_point = []
 prev = ""
 prev_outputted = ""
-broken = True
+broken = False
 time.sleep(2)
 while (True):
     arduino.write(bytes("go", "utf-8"))
@@ -62,7 +62,7 @@ while (True):
         else: 
             arduino.write(bytes("go", "utf-8"))
             continue
-        if (len(data_point) == vector_len*window_size and (not broken)):
+        if (len(data_point) == vector_len*window_size):
             data_point_or = np.array(data_point).reshape(1, -1)
             data_point = scaler.transform(data_point_or)
             probabilities_rf = model_rf.predict_proba(data_point)
@@ -73,11 +73,13 @@ while (True):
                 else:
                     prev += labels[pred_rf]
             else:
-                print("-")
+                if (not broken):
+                    print("-")
                 prev = ""
             data_point = []
             if (len(prev) == 10):
-                print(prev[-1])
+                if (not broken):
+                    print(prev[-1])
                 if (prev_outputted != prev[-1]): 
                     playsound("audio_files/" + prev[-1] + ".mp3")
                     prev_outputted = prev[-1]
