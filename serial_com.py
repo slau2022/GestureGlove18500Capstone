@@ -66,7 +66,7 @@ while (True):
             data_point_or = np.array(data_point).reshape(1, -1)
             data_point = scaler.transform(data_point_or)
             probabilities_rf = model_rf.predict_proba(data_point)
-            pred_rf = np.argmax(probabilities_rf)
+            pred_rf = np.argmax(probabilities_rf)                
             if (probabilities_rf[0, pred_rf] > 0.25 and pred_rf != 27 and pred_rf != 26):
                 if (prev == "" or prev[-1] != labels[pred_rf]):
                     prev = labels[pred_rf]
@@ -76,7 +76,7 @@ while (True):
                 print("-")
                 prev = ""
             data_point = []
-            if (len(prev) == 8):
+            if (len(prev) == 10):
                 if (prev_outputted != prev[-1]): 
                     print(prev[-1])
                     playsound("audio_files/" + prev[-1] + ".mp3")

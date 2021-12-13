@@ -7,14 +7,15 @@ import os
 
 arduino = serial.Serial(port='/dev/cu.usbserial-110', baudrate=115200, timeout=.1)
 
-directory = "dec11_rachel/"
+directory = "dec13_rachel/"
 if (not os.path.isdir(directory)):
     os.mkdir(directory)
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 labels = letters + ['space','transition']
-gesture_name = "l"
-gesture_ind = 11
+labels = ['a', 'e', 'o', 'y', 's', 'd']
+gesture_name = "a"
+gesture_ind = 0
 vector_len = 17
 window_size = 3
 
@@ -29,7 +30,7 @@ print("Go")
 while (True):
     arduino.write(bytes("go", "utf-8"))
     if (keyboard.is_pressed("esc")):
-        if (gesture_ind == 27):
+        if (gesture_ind == len(labels) - 1):
             break
         else:
             all_data = np.array(all_data)
