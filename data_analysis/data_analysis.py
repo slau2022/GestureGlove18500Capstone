@@ -303,4 +303,40 @@ def see_data_amounts():
     plt.bar(labels, amounts)
     plt.show()
 
-see_data_amounts()
+def three_trials():
+    '''FEFE FEFE RFRF EFEF RFRF
+
+    11 -> 17/20, 16/20, 16/20
+    10 -> 17/20, 20/20, 16/20
+    9 -> 20/20, 20/20, 18/20
+    8 -> 18/20, 20/20, 20/20
+    7 -> 20/22, 20/21, 18/20
+    6 -> 20/22, 20/23, 20/25
+
+    0.5 -> 20/47, 20/41, 20/40
+    0.75 -> 20/24, 20/23, 20/24
+    1-> 18/20, 20/20, 20/20
+    1.25 -> 16/20, 17/20, 18/20
+    1.5 -> 12/20, 9/20, 13/20
+    1.75 -> 6/20, 6/20, 8/20
+    2 -> 7/20, 4/20, 6/20'''
+
+    required_consecutive = [11, 10, 9, 8, 7, 6]
+    success_rate = [49/60, 53/60, 58/60, 58/60, 58/63, 60/70]
+    plt.figure()
+    plt.plot(required_consecutive, success_rate)
+    plt.title("Required Consecutive Predictions vs. Accuracy")
+    plt.xlabel("Required Consecutive Predictions")
+    plt.ylabel("Accuracy")
+    plt.savefig("sys_speed_vs_acc_3tr.png")
+
+    signing_rate = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]
+    accuracy = [60/128, 60/71, 58/60, 51/60, 34/60, 20/60, 17/60]
+    plt.figure()
+    plt.plot(signing_rate, accuracy)
+    plt.title("User Signing Rate vs. Accuracy")
+    plt.xlabel("User Signing Rate")
+    plt.ylabel("Accuracy")
+    plt.savefig("user_speed_vs_acc_3tr.png")
+
+three_trials()

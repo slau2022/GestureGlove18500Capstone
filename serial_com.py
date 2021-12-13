@@ -73,14 +73,12 @@ while (True):
                 else:
                     prev += labels[pred_rf]
             else:
-                if (not broken):
-                    print("-")
+                print("-")
                 prev = ""
             data_point = []
-            if (len(prev) == 10):
-                if (not broken):
-                    print(prev[-1])
+            if (len(prev) == 8):
                 if (prev_outputted != prev[-1]): 
+                    print(prev[-1])
                     playsound("audio_files/" + prev[-1] + ".mp3")
                     prev_outputted = prev[-1]
                 else:
